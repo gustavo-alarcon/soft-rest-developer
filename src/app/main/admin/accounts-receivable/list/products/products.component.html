@@ -1,0 +1,36 @@
+<div>
+    <h2 style="font-size:1.2em; font-family: Raleway;" mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">format_list_bulleted</mat-icon>
+        Productos
+    </h2>
+    <mat-divider></mat-divider>
+</div>
+
+<div mat-dialog-content>
+    <div class="order-list" >
+        <ol *ngIf="data">
+            <li class="order" *ngFor="let plate of data; let i = index">
+                <div class="flex-div"
+                    style="justify-content: space-between; width: 100%; font-weight: bold; font-size: medium;">
+                    <span>{{plate['amount']}}   {{plate['name']}}</span>
+                    <span>S/. {{plate['price'] * plate['amount'] | number : '.2'}}</span>
+                </div>
+                <div *ngIf="plate['mainDish']">
+                    <div class="flex-div" style="width: 100%;" *ngIf="plate['appetizer']">
+                        <span>{{plate['appetizer']['name']}}</span>
+                    </div>
+                    <div class="flex-div" style="width: 100%;" *ngIf="plate['mainDish']">
+                        <span>{{plate['mainDish']['name']}}</span>
+                    </div>
+                    <div class="flex-div" style="width: 100%;" *ngIf="plate['type']=='executive'">
+                        <span>{{plate['dessert']['name']}}</span>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="contain" style="margin-top: 20px;">
+    <button mat-stroked-button mat-dialog-close >Cerrar</button>
+</div>

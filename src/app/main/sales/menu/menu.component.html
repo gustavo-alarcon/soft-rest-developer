@@ -1,0 +1,543 @@
+<div class="w3-section w3-margin-left w3-margin-right animated fadeInUp delay-2" *ngIf="isOpening$ | async">
+    <div style="padding: 0 3vw;">
+        <h1 style="font-size:3vh; color: #2B2B2B; font-family: Raleway; font-weight: bolder; font-family: Raleway;">
+            <mat-icon style="vertical-align:middle; transform: scale(1.5); margin-right: 1em; margin-left: 0.3em;">
+                room_service
+            </mat-icon>
+            Menú
+        </h1>
+        <div style="display: flex; border-top: 1px solid;">
+            <div class="ticket">
+                <div class="header flex-div" *ngIf="numberOrder$ | async as number">
+                    <span>Pedido</span>
+                    <span style="flex: 1 1 auto;"></span>
+                    <span>#{{("0000"+number).slice(-5)}}</span>
+                </div>
+                <div class="order-list" *ngIf="plate$ | async">
+                    <ol>
+                        <li class="order" *ngFor="let plate of order; let i = index" (click)="selectPlate(plate, i)"
+                            [ngStyle]="{'border':selectablePlate==plate?'1px solid black':'none'}">
+                            <div class="flex-div"
+                                style="justify-content: space-between; width: 100%; font-weight: bold;">
+                                <span style="width: 7%;">{{plate['amount']}}</span>
+                                <span style="width: 54%; text-align: left;">{{plate['name'] | titlecase}}</span>
+                                <span style="width: 26%; text-align: right;">S/.
+                                    {{plate['price'] * plate['amount'] | number : '.2'}}</span>
+                                <mat-icon style="cursor: pointer; margin-left:5px; vertical-align: middle;"
+                                    (click)="deleteDish(i,false)">
+                                    delete</mat-icon>
+                            </div>
+                            <div class="flex-div" style="justify-content: space-between; width: 100%;"
+                                *ngIf="plate['appetizer']">
+                                <span style="width: 7%;"></span>
+                                <span style="width: 80%;">{{plate['appetizer']['name'] | titlecase}}</span>
+                                <mat-icon style="cursor: pointer; margin-left:5px"
+                                    (click)="deleteSubDish(i,'appetizer')">delete
+                                </mat-icon>
+                            </div>
+                            <div class="flex-div" style="justify-content: space-between; width: 100%;"
+                                *ngIf="plate['mainDish']">
+                                <span style="width: 7%;"></span>
+                                <span style="width: 80%;">{{plate['mainDish']['name'] | titlecase}}</span>
+                                <mat-icon style="cursor: pointer; margin-left:5px"
+                                    (click)="deleteSubDish(i,'mainDish')">delete
+                                </mat-icon>
+                            </div>
+                            <div class="flex-div" style="justify-content: space-between; width: 100%;"
+                                *ngIf="plate['dessert']">
+                                <span style="width: 7%;"></span>
+                                <span style="width: 80%;">{{plate['dessert']['name'] | titlecase}}</span>
+                                <mat-icon style="cursor: pointer; margin-left:5px" (click)="deleteSubDish(i,'dessert')">
+                                    delete
+                                </mat-icon>
+                            </div>
+                            <div *ngIf="plate['products']">
+                                <div class="flex-div" style="justify-content: space-between; width: 100%;"
+                                    *ngFor="let product of plate['products']">
+                                    <span style="width: 7%;"></span>
+                                    <span style="width: 7%;">{{product['quantity']}}</span>
+                                    <span style="width: 80%;">{{product['name'] | titlecase}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <div class="total">
+                    <div class="flex-div" style="justify-content:space-between">
+                        <span>Total</span>
+                        <span>S/. {{total | number: '.2'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="categories" *ngIf="categoriesList">
+                <span class="header">Categorías</span>
+                <div class="flex-div">
+                    <div class="category selected" (click)="MenuList=true; categoriesList=false">
+                        <div class="w3-center">
+                            <mat-icon class="icon">restaurant</mat-icon>
+                            <p>Menú del día</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Piqueos'">
+                        <div class="w3-center">
+                            <img class="icon" src="../../../../assets/images/pollo-frito.png" alt="">
+                            <p>Piqueos</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Extras'">
+                        <div class="w3-center">
+                            <mat-icon class="icon">deck</mat-icon>
+                            <p>Extras</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Bebidas'">
+                        <div class="w3-center">
+                            <mat-icon class="icon">free_breakfast</mat-icon>
+                            <p>Bebidas</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Combos'">
+                        <div class="w3-center">
+                            <mat-icon class="icon">fastfood</mat-icon>
+                            <p>Combos</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Promociones'">
+                        <div class="w3-center">
+                            <img class="icon" src="../../../../assets/images/promocion.png" alt="">
+                            <p>Promociones</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Postres'">
+                        <div class="w3-center">
+                            <img class="icon" src="../../../../assets/images/comida-y-restaurante 1.png" alt="">
+                            <p>Postres</p>
+                        </div>
+                    </div>
+                    <div class="category" (click)="otherList=true; categoriesList=false; otherTitle='Otros'">
+                        <div class="w3-center">
+                            <img class="icon" src="../../../../assets/images/cesta 1.png" alt="">
+                            <p>Otros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="MenuList" style="width:100%;">
+                <div style="height: 74vh;">
+                    <div class="type">
+                        <span class="header">Tipo</span>
+                        <div class="flex-div" style="height: 19vh; overflow-x: auto;">
+                            <div class="category" *ngFor="let menu of menus$|async"
+                                [ngStyle]="{'background': menu['value']=='executive'?'rgba(183, 7, 5, 0.2)':menu['value']=='simple'?'rgba(237, 172, 47, 0.4)':''}"
+                                (click)="firstOrder(menu['value'],menu['price'],menu['name'])">
+                                <div class="w3-center">
+                                    <img *ngIf="menu['value']=='executive'" class="icon"
+                                        src="../../../../assets/images/comida.png" alt="">
+                                    <mat-icon *ngIf="menu['value']=='simple'" class="icon">restaurant</mat-icon>
+                                    <img *ngIf="menu['value']=='second'" class="icon"
+                                        src="../../../../assets/images/almuerzo.png" alt="">
+                                    <p>{{menu['shortName']}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="plates">
+                        <div class="flex-div" style="justify-content: space-between; overflow: auto;  height: 43.5vh;">
+                            <div style="margin-bottom: 2vh;" *ngIf="entry.length">
+                                <span class="header">Entrada</span>
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of entry" (click)="selectedDish(plate)">
+                                        <span class="stock">{{plate['initialStock']-plate['sold']}} /
+                                            {{plate['initialStock']}}</span>
+                                        <p>{{plate['name'] | titlecase}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 2vh;" *ngIf="soup.length">
+                                <span class="header">Sopa</span>
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of soup" (click)="selectedDish(plate)">
+                                        <span class="stock">{{plate['initialStock']-plate['sold']}} /
+                                            {{plate['initialStock']}}</span>
+                                        <p>{{plate['name'] | titlecase}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 2vh;" *ngIf="dessert.length">
+                                <span class="header">Postres</span>
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of dessert" (click)="selectedDish(plate)">
+                                        <span class="stock">{{plate['initialStock']-plate['sold']}} /
+                                            {{plate['initialStock']}}</span>
+                                        <p>{{plate['name'] | titlecase}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 2vh;" *ngIf="second.length">
+                                <span class="header">Segundos</span>
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of second" (click)="selectedDish(plate)">
+                                        <span class="stock">{{plate['initialStock']-plate['sold']}} /
+                                            {{plate['initialStock']}}</span>
+                                        <p>{{plate['name'] | titlecase}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <div class="flex-div" style="justify-content: space-around;">
+                        <button mat-raised-button color="PRIMARY" (click)=" cancelOrder()">Cancelar</button>
+                        <button mat-raised-button style="background-color: #C8C8C8;"
+                            (click)="goToCategories()">Categorías</button>
+                        <button mat-raised-button style="background: #EE8434; color: white"
+                            (click)="MenuList=false; generateSale=true; this.selectablePlate=''"
+                            [disabled]="!order.length">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+            <div class="categories others" style="padding-right: 0;" *ngIf="otherList">
+                <span class="header">{{otherTitle}}</span>
+                <div style="height: 65vh;">
+                    <mat-form-field *ngIf="otherTitle=='Otros'" class="w3-block" appearance="outline">
+                        <input type="text" placeholder="Búsqueda por producto" matInput [formControl]="searchProduct">
+                    </mat-form-field>
+                    <div style="height: 51.9vh; overflow: auto;" *ngIf="otherTitle=='Otros'">
+                        <div *ngIf="others$ | async">
+                            <div *ngIf="favorites.length">
+                                <span class="header">Los 5 Favoritos <mat-icon style="vertical-align: middle;">grade
+                                    </mat-icon>
+                                </span>
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of favorites"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price">S/. {{plate['price'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="others.length">
+                                <span class="header">Todos</span>
+                                <div class="flex-div">
+                                    <div *ngFor="let plate of others" [className]="plate['stock']>0?'box':'box off'"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Piqueos'">
+                        <div *ngIf="appetizer$ | async">
+                            <div *ngIf="piqueo.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of piqueo"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                        <span class="price" *ngIf="plate['promoPrice']">S/.
+                                            {{plate['promoPrice'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Bebidas'">
+                        <div *ngIf="drinks$ | async">
+                            <div *ngIf="bebidas.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of bebidas"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                        <span class="price" *ngIf="plate['promoPrice']">S/.
+                                            {{plate['promoPrice'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Promociones'">
+                        <div *ngIf="offers$ | async">
+                            <div *ngIf="offers.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of offers"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                        <span class="price" *ngIf="plate['promoPrice']">S/.
+                                            {{plate['promoPrice'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Postres'">
+                        <div *ngIf="dessert$ | async">
+                            <div *ngIf="othersDesserts.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of othersDesserts"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                        <span class="price" *ngIf="plate['promoPrice']">S/.
+                                            {{plate['promoPrice'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Extras'">
+                        <div *ngIf="extras$ | async">
+                            <div *ngIf="extras.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of extras"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                        <span class="price" *ngIf="plate['promoPrice']">S/.
+                                            {{plate['promoPrice'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 63.4vh; overflow: auto;" *ngIf="otherTitle=='Combos'">
+                        <div *ngIf="combo$ | async">
+                            <div *ngIf="combos.length">
+                                <div class="flex-div">
+                                    <div class="box" *ngFor="let plate of combos"
+                                        [ngStyle]="{'display': plate['state']=='Publicado'?'block':'none'}"
+                                        (click)="plate['stock']>0?addOrder(plate):''">
+                                        <span class="stock"
+                                            *ngIf="plate['stock']">{{plate['stock'] | number: '2.0'}}</span>
+                                        <p>{{plate['name']}}</p>
+                                        <span class="price" *ngIf="plate['price']">S/.
+                                            {{plate['price'] | number: '.2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons" style="margin-top: 3vh;">
+                    <div class="flex-div" style="justify-content: space-around;">
+                        <button mat-raised-button color="PRIMARY"
+                            (click)="cancelOrder(); searchProduct.setValue('') ">Cancelar</button>
+                        <button mat-raised-button style="background-color: #C8C8C8;"
+                            (click)="otherList=false; categoriesList=true; selectablePlate = null; searchProduct.setValue('') ">Categorías</button>
+                        <button mat-raised-button color="secondary"
+                            (click)="otherList=false; generateSale=true; searchProduct.setValue('') ">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="generateSale" class="sale categories">
+                <span class="header">Generar Venta</span>
+                <div style="height: 66vh; overflow: auto;">
+                    <div class="container-box" style="width: 100%;">
+                        <span class="title-box">Comprobante</span>
+                        <div class="flex-div" style=" align-items: center;width: 100%; justify-content: space-between;">
+                            <div class="flex-div">
+                                <div [className]="checketView ? 'box selected' : 'box'"
+                                    (click)="billView = false; ticketView = false; checketView = true;selectedPay='checket';this.billForm.reset()">
+                                    <mat-icon>receipt</mat-icon>
+                                    <p>Ticket</p>
+                                </div>
+                                <div [className]="billView ? 'box selected' : 'box'"
+                                    (click)="changetoBill(); selectedPay = 'bill'">
+                                    <mat-icon>library_books</mat-icon>
+                                    <p>Factura</p>
+                                </div>
+                                <div [className]="ticketView ? 'box selected' : 'box'"
+                                    (click)="billView = false; ticketView = true; checketView = false; selectedPay = 'ticket';this.billForm.reset()">
+                                    <mat-icon>library_books</mat-icon>
+                                    <p>Boleta</p>
+                                </div>
+
+                            </div>
+                            <div class="flex-div w3-margin-top">
+                                <div class="w3-margin-left" style="width: 17vh;">
+                                    <span>Nro de Serie</span>
+                                    <div class="input-disabled" *ngIf="billView">FE001</div>
+                                    <div class="input-disabled" *ngIf="ticketView">BE001</div>
+                                    <div class="input-disabled" *ngIf="checketView">T0001</div>
+                                </div>
+                                <div class="w3-margin-left" style="width: 24vh;"
+                                    *ngIf="documentCorrelative$ | async as doc">
+                                    <span>Correlativo</span>
+                                    <div class="input-disabled" *ngIf="billView">{{doc.bill}}</div>
+                                    <div class="input-disabled" *ngIf="ticketView">{{doc.ticket}}</div>
+                                    <div class="input-disabled" *ngIf="checketView">{{doc.checket}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="flex-div" style="width: 100%; justify-content: space-between;">
+                        <div class="container-box" style="margin-right: 2vw;">
+                            <span class="title-box">Datos del Cliente</span>
+                            <div style="width: 100%; max-width: 420px; margin-top: 3vh;">
+                                <div *ngIf="billView">
+                                    <form [formGroup]="billForm" *ngIf="filteredCustomersBusiness$ | async as filter">
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>RUC</mat-label>
+                                            <input matInput type="number" placeholder="RUC" formControlName="ruc"
+                                                [matAutocomplete]="autoCustomersRuc" autocomplete="off"
+                                                (keyup.enter)="chooseCustomer()">
+                                            <mat-autocomplete #autoCustomersRuc="matAutocomplete"
+                                                [displayWith]="showRucCustomer">
+                                                <mat-option *ngFor="let option of filter.ruc" [value]="option"
+                                                    (keyup.enter)="chooseCustomer()" (click)="chooseCustomer()">
+                                                    <strong>{{option['ruc']}}</strong>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint>Requerido*</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>Razón Social</mat-label>
+                                            <input matInput type="text" placeholder="Razón Social"
+                                                formControlName="businessName" [matAutocomplete]="autoCustomers"
+                                                autocomplete="off" (keyup.enter)="chooseCustomer()">
+                                            <mat-autocomplete #autoCustomers="matAutocomplete"
+                                                [displayWith]="showBusinessNameCustomer">
+                                                <mat-option *ngFor="let option of filter.businessName" [value]="option"
+                                                    (keyup.enter)="chooseCustomer()" (click)="chooseCustomer()">
+                                                    <strong>{{option['businessName']}}</strong>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint>Requerido*</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>Dirección</mat-label>
+                                            <input matInput placeholder="Dirección" formControlName="address">
+                                            <mat-hint>Requerido*</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>Teléfono</mat-label>
+                                            <input matInput placeholder="Teléfono" formControlName="phone">
+                                            <mat-hint>Requerido*</mat-hint>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+                                <div *ngIf="ticketView || checketView">
+                                    <form [formGroup]="ticketForm" *ngIf="filteredCustomersNatural$ | async as filter">
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>DNI</mat-label>
+                                            <input matInput type="number" placeholder="DNI" formControlName="dni"
+                                                [matAutocomplete]="autoCustomersDni" autocomplete="off"
+                                                (keyup.enter)="chooseCustomer()">
+                                            <mat-autocomplete #autoCustomersDni="matAutocomplete"
+                                                [displayWith]="showDniCustomer">
+                                                <mat-option *ngFor="let option of filter.dni" [value]="option"
+                                                    (keyup.enter)="chooseCustomer()" (click)="chooseCustomer()">
+                                                    <strong>{{option['dni']}}</strong>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint>Opcional*</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>Nombre / Apellido</mat-label>
+                                            <input matInput type="text" placeholder="Nombre" formControlName="name"
+                                                [matAutocomplete]="autoCustomersName" autocomplete="off"
+                                                (keyup.enter)="chooseCustomer()">
+                                            <mat-autocomplete #autoCustomersName="matAutocomplete"
+                                                [displayWith]="showNameCustomer">
+                                                <mat-option *ngFor="let option of filter.name" [value]="option"
+                                                    (keyup.enter)="chooseCustomer()" (click)="chooseCustomer()">
+                                                    <strong>{{option['name']}}</strong>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint>Opcional*</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="w3-block">
+                                            <mat-label>Teléfono</mat-label>
+                                            <input matInput placeholder="Teléfono" formControlName="phone">
+                                            <mat-hint>Opcional*</mat-hint>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+                                <div *ngIf="showReceivable" class="w3-margin-top">
+                                    <mat-checkbox [(ngModel)]="receivable">A cuenta</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-box">
+                            <span class="title-box">Tipo de pago</span>
+                            <div class="flex-div" style="margin-bottom: 1vh;">
+                                <div [className]="cashView ? 'box selected' : 'box'"
+                                    (click)="cashView = true; visaView = false; masterCardView = false">
+                                    <mat-icon>money</mat-icon>
+                                    <p>Efectivo</p>
+                                </div>
+                                <div [className]="visaView ? 'box selected' : 'box'"
+                                    (click)="cashView = false; visaView = true; masterCardView = false">
+                                    <mat-icon>credit_card</mat-icon>
+                                    <p>Visa</p>
+                                </div>
+                                <div [className]="masterCardView ? 'box selected' : 'box'"
+                                    (click)="cashView = false; visaView = false; masterCardView = true">
+                                    <mat-icon>credit_card</mat-icon>
+                                    <p>Mastercard</p>
+                                </div>
+                            </div>
+                            <div class="container-box">
+                                <span class="title-box">Pagado</span>
+                                <div class="flex-div" style="margin-top: 3vh; justify-content: space-between;">
+                                    <div class="pay">
+                                        <div>Entrego</div>
+                                        <mat-form-field appearance="outline">
+                                            <input matInput placeholder="0.00" autocomplete="off" type="number" min="0"
+                                                [formControl]="pay">
+                                            <span matPrefix style="vertical-align: super;">S/. </span>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="pay" *ngIf="cashView && change$ | async">
+                                        <div>Vuelto</div>
+                                        <mat-form-field appearance="outline">
+                                            <input matInput disabled type="number" [(ngModel)]="change">
+                                            <span matPrefix style="vertical-align: super;">S/. </span>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons" style="margin-top: 2vh;">
+                    <div class="flex-div" style="justify-content: space-around;">
+                        <button mat-raised-button color="PRIMARY" (click)="cancelOrder()">Cancelar</button>
+                        <button mat-raised-button style="background-color: #C8C8C8;"
+                            (click)="generateSale=false; categoriesList=true; this.pay.setValue('')">Categorías</button>
+                        <button *ngIf="!billView" mat-raised-button color="secondary" [disabled]="!(pay.value >= total)"
+                            (click)="printVoucher()">Grabar</button>
+                        <button *ngIf="billView" mat-raised-button color="secondary"
+                            [disabled]="!(pay.value >= total) || !billForm.valid"
+                            (click)="printVoucher()">Grabar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

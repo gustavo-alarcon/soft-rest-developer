@@ -1,0 +1,261 @@
+<div class="animated fadeIn dalay-4 slower" *ngIf="auth.userAndRole$ | async as user">
+    <mat-toolbar style="color: #B70705; background: #EFEFEF;">
+
+        <button mat-icon-button class="redText" (click)="toggleSideMenu()">
+            <mat-icon style="transform: scale(1.5);">menu</mat-icon>
+        </button>
+        <div class="title">
+            <span>SoftRest</span>
+        </div>
+        <span style="flex: 1 1 auto;"></span>
+        <div>
+            <button class="sign-button" mat-button [matMenuTriggerFor]="menu">
+                <span>{{user.displayName}}</span>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="auth.signOut()">
+                    <mat-icon>exit_to_app</mat-icon> Cerrar sesión
+                </button>
+                <button mat-menu-item class="ms-font-3" routerLink="configuration/users"
+                    *ngIf="user['role']['configurationSection']">
+                    <mat-icon>settings_box</mat-icon> Configuración
+                </button>
+                <button mat-menu-item class="w3-small ms-font-3" disabled>version 1.0.0r</button>
+            </mat-menu>
+        </div>
+
+    </mat-toolbar>
+
+    <mat-sidenav-container style="min-height:90vh">
+        <mat-sidenav mode="over" #sideMenu [(opened)]="openedMenu" class="mat-elevation-z8"
+            style="background: #EFEFEF;">
+            <div>
+                <!-- Ventas -->
+                <mat-expansion-panel *ngIf="user['role']['salesSection']"
+                    style="width:17em; box-shadow:none; border-radius:0px 0px 0px 0px; background: #EFEFEF;  "
+                    class="w3-border-bottom" [ngClass]="{'ms-expansion-panel-menu':salesOpenedFlag}"
+                    (opened)="salesOpened()" (closed)="salesClosed()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'ms-expansion-panel-title':salesOpenedFlag}" class="redText">
+                            <mat-icon style="vertical-align:middle; margin-right:1em">storefront</mat-icon>
+                            Ventas
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <button *ngIf="user['role']['salesMenu']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="ventas/menu" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            room_service
+                        </mat-icon> Menú
+                    </button>
+                    <button *ngIf="user['role']['salesRecord']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="ventas/historial" style="text-align:left;border-radius:0px 0px 0px 0px;"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">restore
+                        </mat-icon> Historial
+                    </button>
+                    <button *ngIf="user['role']['salesCash']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="ventas/caja" style="text-align:left;border-radius:0px 0px 0px 0px;"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">monetization_on
+                        </mat-icon> Caja
+                    </button>
+                    <p class="w3-margin-bottom"></p>
+
+                </mat-expansion-panel>
+
+                <!-- almacen -->
+                <mat-expansion-panel *ngIf="user['role']['warehouseSection']"
+                    style="width:17em; box-shadow:none; border-radius:0px 0px 0px 0px; background: #EFEFEF;"
+                    class="w3-border-bottom" [ngClass]="{'ms-expansion-panel-menu':warehouseOpenedFlag}"
+                    (opened)="warehouseOpened()" (closed)="warehouseClosed()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'ms-expansion-panel-title':warehouseOpenedFlag}" class="redText">
+                            <mat-icon style="vertical-align:middle; margin-right:1em">
+                                kitchen</mat-icon> Almacén
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <button *ngIf="user['role']['warehousePurchases']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="almacen/compras" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">shopping_basket
+                        </mat-icon> Compras
+                    </button>
+
+                    <button *ngIf="user['role']['warehouseStocktaking']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="almacen/inventario" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            assignment_turned_in
+                        </mat-icon> Inventarios
+                    </button>
+
+                </mat-expansion-panel>
+
+                <!-- Cocina -->
+                <mat-expansion-panel *ngIf="user['role']['kitchenSection']"
+                    style="width:17em;box-shadow:none;border-radius:0px 0px 0px 0px; background: #EFEFEF;"
+                    class="w3-border-bottom" [ngClass]="{'ms-expansion-panel-menu':kitchenOpenedFlag}"
+                    (opened)="kitchenOpened()" (closed)="kitchenClosed()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'ms-expansion-panel-title':kitchenOpenedFlag}" class="redText">
+                            <mat-icon style="vertical-align:middle; margin-right:1em">restaurant_menu</mat-icon>
+                            Cocina
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <button *ngIf="user['role']['kitchenRecipes']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink='cocina/recetas' style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            list_alt
+                        </mat-icon> Recetas
+                    </button>
+
+                    <button 
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink='cocina/platos' style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            restaurant
+                        </mat-icon> Platos/Varios
+                    </button>
+                    
+                    <button *ngIf="user['role']['kitchenOrders']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink='cocina/pedidos' style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            description
+                        </mat-icon> Pedidos
+                    </button>
+
+                    <button *ngIf="user['role']['kitchenPromos']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink='cocina/promociones' style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            %
+                        </mat-icon> Promociones
+                    </button>
+
+                    <button *ngIf="user['role']['kitchenCombos']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink='cocina/combos' style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            fastfood
+                        </mat-icon> Combos
+                    </button>
+
+
+                    <p class="w3-margin-bottom"></p>
+
+                </mat-expansion-panel>
+
+                <!-- Administrativo -->
+                <mat-expansion-panel *ngIf="user['role']['adminSection']"
+                    style="width:17em;box-shadow:none; border-radius:0px 0px 0px 0px; background: #EFEFEF;"
+                    class="w3-border-bottom" [ngClass]="{'ms-expansion-panel-menu':adminOpenedFlag}"
+                    (opened)="adminOpened()" (closed)="adminClosed()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'ms-expansion-panel-title':adminOpenedFlag}" class="redText">
+                            <mat-icon style="vertical-align:middle; margin-right:1em">assignment</mat-icon>
+                            Administrativo
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <button *ngIf="user['role']['adminAccountsPayable']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="administrativo/cuentas-por-pagar" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            credit_card
+                        </mat-icon> Cuentas por pagar
+                    </button>
+
+                    <button *ngIf="user['role']['adminAccountsReceivable']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="administrativo/cuentas-por-cobrar" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            card_membership
+                        </mat-icon> Cuentas por cobrar
+                    </button>
+
+                    <button *ngIf="user['role']['adminManageCash']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="administrativo/admin-cajas" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            monetization_on
+                        </mat-icon> Admin. cajas
+                    </button>
+
+                    <p class="w3-margin-bottom"></p>
+
+                </mat-expansion-panel>
+
+                <!-- Terceros -->
+                <mat-expansion-panel *ngIf="user['role']['thirdPartiesSection']"
+                    style="width:17em;box-shadow:none; border-radius:0px 0px 0px 0px; background: #EFEFEF;"
+                    class="w3-border-bottom" [ngClass]="{'ms-expansion-panel-menu':thirdOpenedFlag}"
+                    (opened)="thirdOpened()" (closed)="thirdClosed()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title [ngClass]="{'ms-expansion-panel-title':thirdOpenedFlag}" class="redText">
+                            <mat-icon style="vertical-align:middle; margin-right:1em">contacts</mat-icon> Terceros
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+
+                    <button *ngIf="user['role']['thirdPartiesCustomers']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="terceros/clientes" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            person_pin
+                        </mat-icon> Clientes
+                    </button>
+
+                    <button *ngIf="user['role']['thirdPartiesProviders']"
+                        mat-button class="w3-block ms-expansion-panel-menu redText w3-padding"
+                        routerLink="terceros/proveedores" style="text-align:left;border-radius:0px 0px 0px 0px"
+                        (click)="toggleSideMenu()">
+                        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">
+                            assignment_turned_in
+                        </mat-icon> Proveedores
+                    </button>
+
+                </mat-expansion-panel>
+
+            </div>
+        </mat-sidenav>
+
+
+
+        <mat-sidenav-content>
+            <mat-progress-bar mode="indeterminate" *ngIf="loadingRouteConfig"></mat-progress-bar>
+            <router-outlet></router-outlet>
+            <div *ngIf="this.router.url=='/main'" style="height: 90vh" class="w3-display-container">
+                <div class="w3-display-middle w3-center">
+                    <img src="./../../assets/images/cocinar 1.png" style="width: 35vh;" alt="">
+                    <div>
+                        <p class="sentence">
+                            Cocinar con amor
+                            te alimenta el Alma
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+
+</div>

@@ -1,0 +1,56 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">list</mat-icon> Lista de items
+</div>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <div class="mat-elevation-z8 w3-margin" style="overflow:auto">
+    <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+      <ng-container matColumnDef="index" sticky>
+        <th mat-header-cell style="padding:0px 25px" *matHeaderCellDef>N°</th>
+        <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+          {{i+1}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sku">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>SKU</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.sku}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Item</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.item}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Cantidad</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.quantity | number : '.2'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount" stickyEnd>
+        <th mat-header-cell style="padding:0px 15px" *matHeaderCellDef>Importe</th>
+        <td mat-cell style="padding:0px 15px" *matCellDef="let raw">
+          {{raw.averageCost | currency : 'S/.'}}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="w3-margin-right" color="secondary" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,15 @@
+<h1 class="ms-font-rubik ms-color-bt" style="font-size:1.3em">
+  <mat-icon style="vertical-align:middle">delete</mat-icon> Borrar permiso
+</h1>
+<mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" *ngIf="uploading"></mat-progress-bar>
+<mat-dialog-content>
+  <p class="ms-font-poppins ms-color-bt" style="font-size:1em">¿Está seguro de borrar el permiso?</p>
+  <p class="ms-font-poppins ms-color-bt" style="font-size:1em">*Los usuarios que esten vinculados a este nivel de
+    permiso, perderán todos sus accesos <br> y tendra que actualizar la información de cada uno</p>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" style="margin-bottom: -16px">
+  <button mat-button class="w3-margin-right w3-margin-bottom" mat-dialog-close>No</button>
+  <button mat-raised-button class="w3-margin-bottom" color="warn" (click)="save()">Si, borrar</button>
+</mat-dialog-actions>

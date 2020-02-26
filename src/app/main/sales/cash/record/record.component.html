@@ -1,0 +1,157 @@
+<div style="min-width: 74vw;">
+    <h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">restore</mat-icon>
+        <span class="w3-margin-left">Historial</span>
+    </h2>
+    <mat-dialog-content>
+        <div class="w3-padding">
+            <div style="display: flex; flex-wrap: wrap; align-items: center;" class="w3-margin-bottom">
+                <form [formGroup]="search">
+                    <mat-form-field style="margin-right: 16px" color="accent">
+                        <input matInput placeholder="Seleccione un rango de fechas" [satDatepicker]="picker"
+                            formControlName="date">
+                        <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+                        <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+                    </mat-form-field>
+                </form>
+                <span style="flex: 1 1 auto;"></span>
+                <div>
+                    <button mat-raised-button color="secondary" (click)="downloadXls()">
+                        <mat-icon style="vertical-align: middle;">cloud_download</mat-icon>
+                        Descargar
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="openings$ | async">
+                <div *ngIf="dataSource.data.length; else default" class="mat-elevation-z8 w3-margin-top w3-round"
+                    style="border-radius: 10px 10px 0 0; margin-top: 2vh;">
+                    <div class="w3-round-large" style="overflow:auto; border-radius: 10px 10px 0 0;">
+                        <table mat-table [dataSource]="dataSource" style="width: 100%; font-family: Raleway;">
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="index">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"
+                                    style="color:#2b2b2b; padding-left:0.5em" class="w3-center w3-border-left">
+                                    {{i+1}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="opening">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Apertura </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left">
+                                    <span>{{element['openedAt'].toMillis() | date: 'dd/MM/yyyy'}}</span><br>
+                                    <span>{{element['openedAt'].toMillis() | date: 'hh:mm a'}}</span></td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="closing">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Cierre </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left">
+                                    <span
+                                        *ngIf="element['closedAt']">{{element['closedAt'].toMillis() | date: 'dd/MM/yyyy'}}</span><br>
+                                    <span
+                                        *ngIf="element['closedAt']">{{element['closedAt'].toMillis() | date: 'hh:mm a'}}</span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="openingBalance">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Saldo Apertura </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left"> S/. {{element['openingBalance'] | number: '.2'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="totalBalance">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Saldo Total
+                                </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left"> S/. {{element['totalAmount'] | number: '.2'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="totalIncomes">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Total Ingresos </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left"> S/.
+                                    {{element.totalIncomes | number: '.2'}} </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="totalExpensives">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Total Egresos </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left">S/. {{element['totalDepartures'] | number: '.2'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="responsible">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Responsable
+                                </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding-left:0.5em"
+                                    class="w3-center w3-border-left"> {{element['openedBy']['displayName']}} </td>
+                            </ng-container>
+
+                            <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                                matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                                    style="background: #C8C8C8;color: #828282;font-size: medium;padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;">
+                                    Acciones</th>
+                                <td mat-cell *matCellDef="let element"
+                                    style="color:#2b2b2b; padding:0px 1.5em 0px 1em; border-left:1px solid #B9B9B9;background-color: white;"
+                                    class="w3-center">
+                                    <mat-menu #requestsMenu="matMenu">
+                                        <button mat-menu-item (click)="view(element['id'])">
+                                            <mat-icon style="vertical-align: middle;">folder</mat-icon> Mostrar
+                                            Transacciones
+                                        </button>
+                                    </mat-menu>
+                                    <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator class="w3-round-large" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+                <ng-template #default>
+                    <div class="w3-container w3-center  w3-round-large mat-elevation-z8 w3-margin-top w3-margin-bottom">
+                        <h2 style="font-family: Raleway; color: dimgray">
+                            No hay movimientos
+                        </h2>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions style="margin-bottom: -16px; margin-top: 20px;" align="end">
+        <button mat-raised-button class="w3-margin-right" mat-dialog-close color="PRIMARY">Cancelar</button>
+    </mat-dialog-actions>
+</div>

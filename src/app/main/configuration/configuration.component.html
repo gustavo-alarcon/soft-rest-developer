@@ -1,0 +1,24 @@
+<div class="w3-section w3-margin-left w3-margin-right animated fadeInUp delay-2">
+  <div class="w3-row">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10">
+      <h1 class="ms-font-rubik ms-color-2b" style="font-size:1.5em;">
+        <mat-icon style="vertical-align:middle; font-size: 30px; width:30px; height: 30px">settings</mat-icon>
+        Configuración
+      </h1>
+
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link"
+          [active]="activeLink['name'] == link['name']" [routerLink]="link['route']"> {{link['name']}} </a>
+      </nav>
+      
+      <mat-progress-bar mode="indeterminate" *ngIf="loadingRouteConfig"></mat-progress-bar>
+      <router-outlet></router-outlet>
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.contain {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.header {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 37px;
+}
+
+.warn {
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 28px;
+}
+
+.mat-dialog-content {
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: #929292;
+}
+
+.flex-div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.order {
+    padding: 2vh 1vw;
+    font-family: Raleway;
+    cursor: pointer;
+}
+
+.order .flex-div {
+    margin: 5px 0;
+}
+
+.order-list {
+    min-width: 300px;
+    overflow: auto;
+}
+
+.total {
+    font-size: 2.2vh;
+    font-weight: bolder;
+    border-top: 1px solid;
+    padding: 10px 20px;
+}
+
+.order-list ol {
+    list-style-position: inside;
+    padding-inline-start: 0;
+    list-style-type: none;
+}

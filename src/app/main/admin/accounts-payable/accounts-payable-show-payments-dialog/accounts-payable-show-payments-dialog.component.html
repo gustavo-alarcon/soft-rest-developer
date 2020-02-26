@@ -1,0 +1,70 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">gavel</mat-icon> Lista de pagos
+</div>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <div class="mat-elevation-z8 w3-margin" style="overflow:auto">
+    <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+      <ng-container matColumnDef="index" sticky>
+        <th mat-header-cell style="padding:0px 25px" *matHeaderCellDef>N°</th>
+        <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+          {{i+1}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="paidAt">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Fecha</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.paidAt ? (raw.paidAt.seconds * 1000 | date: 'dd/MM/yyyy') : '---'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Tipo de pago</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.type}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentType">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Medio de pago</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.paymentType ? raw.paymentType : '---'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Importe</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.amount | currency : 'S/.'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="paidBy">
+        <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>Pagado por</th>
+        <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+          {{raw.paidBy ? raw.paidBy.displayName : '---'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cashReference">
+        <th mat-header-cell style="padding:0px 15px" *matHeaderCellDef>Caja</th>
+        <td mat-cell style="padding:0px 15px" *matCellDef="let raw">
+          {{raw.cashReference ? raw.cashReference.name : '---'}}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="w3-margin-right" color="warn" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

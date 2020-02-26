@@ -1,0 +1,52 @@
+<h2 class="ms-font-montserrat mat-title" mat-dialog-title>
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">credit_card</mat-icon> {{data.provider.name}} -
+  Cuentas
+</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+  <div class="mat-elevation-z8 w3-margin-top w3-margin-bottom">
+    <div style=" overflow:auto">
+      <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+
+        <ng-container matColumnDef="index">
+          <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef>N°</th>
+          <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+            {{raw.index + 1}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bank">
+          <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef mat-sort-header>Banco
+          </th>
+          <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+            {{raw.bank}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef mat-sort-header>Tipo de cuenta
+          </th>
+          <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+            {{raw.type}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="accountNumber">
+          <th mat-header-cell style="padding:0px 8px" *matHeaderCellDef mat-sort-header>Nro de cuenta
+          </th>
+          <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+            {{raw.accountNumber}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="PRIMARY" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

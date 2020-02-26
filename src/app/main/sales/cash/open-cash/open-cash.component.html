@@ -1,0 +1,17 @@
+<div style="font-family: Raleway; max-width: 350px;">
+    <h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">vpn_key</mat-icon>
+        <span class="w3-margin-left">Apertura de caja</span>
+    </h2>
+    <mat-dialog-content>
+        <p>¿Estás seguro de abrir la caja <i>{{data['cash']['name']}}</i>?</p>
+    </mat-dialog-content>
+    <mat-dialog-actions style="margin-bottom: -16px;" align="end">
+        <button mat-raised-button class="w3-margin-right" mat-dialog-close
+            color="PRIMARY">Cancelar</button>
+        <button mat-raised-button class="w3-margin-right" (click)="open()"
+            color="secondary">Sí, abrir</button>
+
+    </mat-dialog-actions>
+</div>

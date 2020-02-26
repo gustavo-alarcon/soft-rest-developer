@@ -1,0 +1,286 @@
+<div class="w3-section w3-margin-left w3-margin-right animated fadeInUp delay-2" *ngIf="auth.userAndRole$ | async as user">
+  <div class="w3-row">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10" style="min-height:86vh; font-family: Raleway;">
+      <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+        <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">assignment_turned_in
+        </mat-icon> Inventario
+      </h1>
+      <mat-divider></mat-divider>
+
+      <mat-progress-bar mode="indeterminate" *ngIf="loadingItems$ | async"></mat-progress-bar>
+      <ng-container>
+        <ng-container *ngIf="items$ | async as items">
+
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; margin: 12px 0px;">
+
+            <!-- Select item's type -->
+            <mat-form-field class="w3-margin-right" appereance="outline">
+              <mat-label>Categoría</mat-label>
+              <mat-icon matPrefix class="w3-margin-right">filter_list</mat-icon>
+              <mat-select [formControl]="itemsTypeFormControl" placeholder="Seleccionar">
+                <mat-option *ngFor="let type of itemsTypes" [value]="type">
+                  {{type}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>Filtro de categorías</mat-hint>
+            </mat-form-field>
+
+            
+            <mat-form-field class="w3-margin-right">
+              <mat-label>Existencia</mat-label>
+              <mat-icon matPrefix class="w3-margin-right">filter_list</mat-icon>
+              <input matInput type="text" [formControl]="itemFormControl" placeholder="Escriba..." autocomplete="off">
+              <mat-hint>Filtro de existencias</mat-hint>
+            </mat-form-field>
+
+            <mat-menu #rawMenu="matMenu">
+              <button *ngIf="user['role']['warehouseStocktakingCreateAction']" mat-menu-item (click)="createItem()" >
+                <mat-icon class="ms-icons-color">add_circle</mat-icon> Crear nuevo
+              </button>
+              <button *ngIf="user['role']['warehouseStocktakingRemoveAction']" mat-menu-item (click)="withdrawHousehold()">
+                <mat-icon class="ms-icons-color">remove_circle</mat-icon> Retirar Inventario
+              </button>
+              <!-- <button mat-menu-item (click)="addHousehold(raw)" *ngIf="user.role.warehouseStocktakingAddHouseholdAction"
+                [disabled]="itemsTypeFormControl.value !== 'MENAJE'">
+                <mat-icon class="ms-icons-color">add_circle</mat-icon> Agregar Menaje
+              </button> -->
+            </mat-menu>
+            <button mat-raised-button style="margin-right: 16px" color="secondary" [matMenuTriggerFor]="rawMenu">
+              <mat-icon>more_vert</mat-icon> Más acciones
+            </button>
+
+            <mat-checkbox *ngIf="user['role']['warehouseStocktakingValuedCheckbox']"
+              [formControl]="valoradoFormControl" style="margin-right: 16px" >Valorado</mat-checkbox>
+
+            <span style="flex: auto 1 1"></span>
+
+            <button *ngIf="user['role']['warehouseStocktakingDownloadAction']" (click)="downloadXls()"
+                    type="button" style="margin-right: 16px" color="secondary" mat-raised-button>
+              <mat-icon style="margin-right: 8px; vertical-align: middle;">cloud_download
+              </mat-icon>
+              <span style="vertical-align: middle;">Descargar</span>
+            </button>
+          </div>
+
+          <ng-container *ngIf="items.length; else default">
+            <div class="mat-elevation-z8 w3-margin-top" style="border-radius: 10px 10px 10px 10px">
+              <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+                <table mat-table [dataSource]="dataSource" matSort 
+                  style="width: 100%; text-align: center !important; width: 100%; font-family: Raleway;">
+
+                  <ng-container matColumnDef="index" sticky>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">N°</th>
+                    <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+                      {{i+1}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="picture">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                      Imagen
+                    </th>
+                    <td mat-cell *matCellDef="let raw" class="w3-center" style="padding:0px 25px">
+                      <a href="{{raw['picture']}}" target="_blank" *ngIf="raw['picture']; else defaultPicture">
+                        <div style="width:200px;height:120px;padding:6px 6px">
+
+                          <img [defaultImage]="defaultImage" [lazyLoad]="raw['picture']" [offset]="100"
+                            style="max-width:100%;height:100%" class="w3-card-4">
+                        </div>
+                      </a>
+                      <ng-template #defaultPicture>
+                        <div style="width:200px;height:120px;padding:6px 6px">
+                          <img src="../../../../assets/images/no-image.png" style="max-width:100%;height:100%"
+                            class="w3-card-4">
+                        </div>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                      Nombre </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.name}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sku">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por tipo de documento" matTooltipPosition="above" mat-sort-header>SKU
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.sku}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="unit">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Medida</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.unit}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="stock">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Stock
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.stock | number : '.2'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="averageCost">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                      Costo promedio
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.averageCost | currency : 'S/.'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalValue">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Valor total</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span
+                        *ngIf="itemsTypeFormControl.value === 'OTROS' || itemsTypeFormControl.value === 'POSTRES'">
+                        {{(raw.stock * raw.price) | currency : 'S/.'}}
+                      </span>
+                      <span
+                        *ngIf="itemsTypeFormControl.value === 'INSUMOS' || itemsTypeFormControl.value === 'MENAJES'">
+                        {{(raw.stock * raw.averageCost) | currency : 'S/.'}}
+                      </span>
+
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Descripción</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.description ? raw.description : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <!-- otros, postres -->
+
+                  <ng-container matColumnDef="price"
+                    *ngIf="itemsTypeFormControl.value === 'OTROS' || itemsTypeFormControl.value === 'POSTRES'">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Precio venta</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.price ? (raw.price | currency : 'S/.') : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="utility"
+                    *ngIf="itemsTypeFormControl.value === 'OTROS' || itemsTypeFormControl.value === 'POSTRES'">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Utilidad</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{ ((raw.stock * raw.price) - (raw.stock * raw.averageCost)) | currency : 'S/.'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por solicitante" matTooltipPosition="above" mat-sort-header>
+                      Creado por</th>
+                    <td mat-cell class="w3-small" style="padding:0px 8px" *matCellDef="let raw">
+                      <span>{{raw.createdBy ? raw.createdBy.displayName : '---' }}</span><br>
+                      <span *ngIf="raw.createdAt">{{raw.createdAt.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.createdAt"><b>
+                          ({{raw.createdAt.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="editedBy">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por solicitante" matTooltipPosition="above" mat-sort-header>
+                      Editado por</th>
+                    <td mat-cell class="w3-small" style="padding:0px 8px" *matCellDef="let raw">
+                      <span>{{raw.editedBy ? raw.editedBy.displayName : '---' }}</span><br>
+                      <span *ngIf="raw.editedAt">{{raw.editedAt.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.editedAt"><b>
+                          ({{raw.editedAt.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Acciones</th>
+                    <td mat-cell class="mat-elevation-z4" style="padding:0px 24px" *matCellDef="let raw">
+                      <mat-menu #rawMenu="matMenu">
+                        <button *ngIf="user['role']['warehouseStocktakingKardexAction']" mat-menu-item (click)="kardex(raw)" >
+                          <mat-icon class="ms-icons-color">ballot</mat-icon> Kardex
+                        </button>
+                        <button *ngIf="user['role']['warehouseStocktakingEditAction']" mat-menu-item (click)="edit(raw)" >
+                          <mat-icon class="ms-icons-color">edit</mat-icon> Editar
+                        </button>
+                        <button *ngIf="user['role']['warehouseStocktakingDeleteAction']" mat-menu-item (click)="delete(raw)" >
+                          <mat-icon class="ms-icons-color">delete</mat-icon> Borrar
+                        </button>
+                      </mat-menu>
+                      <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="text-align-last: center;"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+              </div>
+              <mat-paginator style="border-radius: 0px 0px 10px 10px" [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+        <ng-template #default>
+          <div class="w3-container w3-center  w3-round-large mat-elevation-z8 w3-margin-top w3-margin-bottom">
+            <h2 style="font-family: Raleway; color: dimgray">
+              No hay resultados
+            </h2>
+          </div>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #defaultUser>
+        <p class="mat-h2" style="font-family: Raleway; color: #2b2b2b">Cargando credenciales ...</p>
+      </ng-template>
+
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+</div>

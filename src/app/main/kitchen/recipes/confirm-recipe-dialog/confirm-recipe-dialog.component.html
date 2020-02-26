@@ -1,0 +1,25 @@
+<div mat-dialog-title>
+    <div class="header">
+        <span >
+            <mat-icon style="vertical-align: middle; transform: scale(1.2);">{{data.titleIcon}}</mat-icon>
+            {{data.title}}
+        </span>
+        <button mat-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-hint class="warn">
+        <mat-icon style="vertical-align: middle; transform: scale(0.8);">warning</mat-icon>
+        <span>{{data.warning}}</span>
+    </mat-hint>
+</div>
+
+<div mat-dialog-content>
+    <span [outerHTML]="data.content"></span>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="PRIMARY" type="button" class="w3-margin" (click)="action('cancel')">Cancelar</button>
+    <button mat-raised-button color="secondary" type="button" class="w3-margin"(click)="action('confirm')">Confirmar</button>
+</div>

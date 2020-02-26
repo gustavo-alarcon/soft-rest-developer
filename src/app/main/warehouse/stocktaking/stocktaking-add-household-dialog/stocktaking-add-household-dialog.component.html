@@ -1,0 +1,122 @@
+<div class="w3-container">
+  <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+    <mat-icon style="vertical-align: middle; margin-right:0.2em">remove_circle
+    </mat-icon> Retirar Menaje
+  </h1>
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="w3-padding">
+
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; margin: 12px 0px;">
+
+      <!-- Date Range -->
+      <mat-form-field class="w3-margin-right" style="flex-grow: 2;" appereance="outline">
+        <mat-label>Menaje</mat-label>
+        <input matInput type="text" [matAutocomplete]="autoHousehold" formControlName="name" placeholder="Selecciones"
+          autocomplete="off">
+        <mat-autocomplete #autoHousehold="matAutocomplete">
+          <mat-option *ngFor="let item of households$ | async" [value]="item">
+            {{item.name}} | {{item.sku}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint>Requerido *</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w3-margin-right" style="flex-grow: 1;" appereance="outline">
+        <mat-label>Cant.</mat-label>
+        <input matInput type="number" formControlName="quantity" placeholder="0" min="0" step="0.01">
+        <mat-hint>Requerido *</mat-hint>
+      </mat-form-field>
+
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; margin: 12px 0px;">
+
+      <mat-form-field class="w3-margin-right" style="flex-grow: 3;" appereance="outline">
+        <mat-label>Cant.</mat-label>
+        <input matInput type="number" formControlName="quantity" placeholder="0" min="0" step="0.01">
+        <mat-hint>Requerido *</mat-hint>
+      </mat-form-field>
+
+      <button color="secondary" mat-raised-button (click)="addItem()">
+        <mat-icon style="margin-right: 8px; vertical-align: middle;">add_circle
+        </mat-icon>
+      </button>
+    </div>
+
+    <div class="mat-elevation-z8" style="border-radius: 10px 10px 10px 10px">
+      <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+        <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+
+          <ng-container matColumnDef="index" sticky>
+            <th mat-header-cell style="padding:0px 25px" *matHeaderCellDef>N°</th>
+            <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+              {{i+1}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="item">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px" *matHeaderCellDef>
+              Artículo</th>
+            <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+              {{raw.name}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unit">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px;" *matHeaderCellDef>
+              Medida</th>
+            <td mat-cell style="padding:0px 8px;" *matCellDef="let raw">
+              {{raw.unit}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px;" *matHeaderCellDef>
+              Stock actual</th>
+            <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+              {{raw.stock | number : '.2'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px" *matHeaderCellDef>
+              Cantidad a retirar</th>
+            <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+              {{raw.quantity | number : '.2'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="observations">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px;" *matHeaderCellDef>
+              Observaciones</th>
+            <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+              {{raw.obsrvations}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell style="padding:0px 8px; min-width:65px" *matHeaderCellDef>
+              Acciones</th>
+            <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+              <button mat-icon-button (click)="removeItem()">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+      </div>
+      <mat-paginator style="border-radius: 0px 0px 10px 10px" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="end" style="margin-bottom: -16px;">
+    <button mat-raised-button color="PRIMARY" style="margin:0em 0.5em 0em 0em" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="secondary" style="margin:0em 0.5em 0em 0em">Registrar</button>
+  </mat-dialog-actions>
+</div>

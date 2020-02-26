@@ -1,0 +1,18 @@
+<div>
+    <h2 style="font-size:1.2em; font-family: Raleway;" mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">save_alt</mat-icon>
+        Publicar Orden
+    </h2>
+    <mat-divider></mat-divider>
+</div>
+
+<div mat-dialog-content>
+    <p>Está seguro de publicar la orden:</p>
+    <!--p>Factura {{data['documentSerial']}} - {{data['documentCorrelative']}}</p-->
+</div>
+
+<div class="contain" style="margin-top: 20px;">
+    <button mat-button mat-dialog-close style="background: #B70705; color: white">Cancelar</button>
+    <button class="w3-margin-left" mat-raised-button style="background: #EE8434; color: white" (click)="save()">Sí,
+        publicar</button>
+</div>

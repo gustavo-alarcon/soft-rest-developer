@@ -1,0 +1,24 @@
+<div class="w3-container">
+    <h2 class="ms-font-rubik ms-color-2b" style="font-size:1.2em">
+      <mat-icon style="vertical-align:middle">delete</mat-icon> Anular
+    </h2>
+    <mat-divider></mat-divider>
+    <mat-dialog-content class="w3-padding">
+      <p class="ms-font-raleway ms-color-2b">¿Está seguro de anular este item?</p>
+  
+      <ng-container *ngIf="loading$ | async as loading">
+        <button mat-button disabled>
+          <mat-icon [ngClass]="{'w3-text-gray': loading === 1,
+                                'w3-text-amber': loading === 2,
+                                'w3-text-green': loading === 3 }">check_circle</mat-icon>
+          Anulando Registro
+        </button>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading === 2"></mat-progress-bar>
+      </ng-container><br>
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions align="end" style="margin-bottom: -16px;">
+      <button mat-raised-button color="PRIMARY" style="margin:0em 0.5em 0em 0em" mat-dialog-close>No</button>
+      <button mat-raised-button color="secondary" style="margin:0em 0.5em" (click)="delete()">Si, anular</button>
+    </mat-dialog-actions>
+  </div>

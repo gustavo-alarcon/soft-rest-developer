@@ -1,0 +1,39 @@
+<div class="w3-section w3-margin-left w3-margin-right animated fadeInUp delay-2">
+    <div class="w3-row">
+        <div class="w3-col s0 m1 l1">
+            <p></p>
+        </div>
+        <div class="w3-col s12 m10 l10" style="min-height:86vh; font-family: Raleway;">
+            <h1
+                style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 16px;">
+                <mat-icon
+                    style="vertical-align:middle; height: 35px;width: 35px; font-size: 35px; margin-right: 1em; margin-left: 0.3em;">
+                    restaurant
+                </mat-icon>
+                Menú del día
+            </h1>
+
+            <ng-container *ngIf="auth.userAndRole$ | async as user; else defaultUser">
+                <mat-tab-group>
+                    <mat-tab label="Planificación">
+                        <app-planning *ngIf="user['role']['kitchenDishesPlanning']"></app-planning>
+                    </mat-tab>
+                    <mat-tab label="Ordenes Cocina">
+                        <app-orders *ngIf="user['role']['kitchenDishesOrders']"></app-orders>
+                    </mat-tab>
+                    <mat-tab label="Configuración Menús">
+                        <app-configuration *ngIf="user['role']['kitchenDishesConfiguration']"></app-configuration>
+                    </mat-tab>
+                </mat-tab-group>
+            </ng-container>
+            <ng-template #defaultUser>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p class="mat-h2" style="font-family: Raleway; color: #2b2b2b">Cargando credenciales ...</p>
+            </ng-template>
+
+        </div>
+        <div class="w3-col s0 m1 l1">
+            <p></p>
+        </div>
+    </div>
+</div>

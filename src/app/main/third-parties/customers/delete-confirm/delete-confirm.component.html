@@ -1,0 +1,22 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">delete</mat-icon> Borrar cliente
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" style="margin-bottom:0.5em" *ngIf="uploading"></mat-progress-bar>
+
+<mat-dialog-content style="max-width:300px">
+  <p class="ms-font-montserrat ms-color-11">¿Está seguro de borrar al cliente
+    <b>{{data.customer.name}}</b>?</p>
+
+  <div style="display:flex; align-items:center" *ngIf="uploading">
+    <mat-icon class="w3-margin-right" [ngStyle]="{'color': flags.deleted ? 'forestgreen' : 'gray'}">check_circle
+    </mat-icon>
+    <span class="w3-margin-right ms-font-montserrat w3-small">Borrando cliente</span>
+  </div>
+</mat-dialog-content>
+
+<mat-divider class="w3-margin-top"></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="PRIMARY" class="w3-margin-right" mat-dialog-close>No</button>
+  <button mat-raised-button color="secondary" (click)="delete()" [disabled]="uploading">Si, borrar</button>
+</mat-dialog-actions>

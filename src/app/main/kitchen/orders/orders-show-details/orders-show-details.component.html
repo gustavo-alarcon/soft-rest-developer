@@ -1,0 +1,90 @@
+<div class="w3-container">
+  <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+    <mat-icon style="vertical-align: middle; margin-right:0.2em">restaurant
+    </mat-icon> Pedido
+  </h1>
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="w3-padding">
+    <mat-progress-bar mode="indeterminate" *ngIf="loadingDetails$ | async"></mat-progress-bar>
+    <ng-container *ngIf="auth.userAndRole$ | async as user; else defaultUser">
+
+
+      <!-- <div style="display: flex; flex-wrap: wrap; align-items: baseline; margin: 12px 0px;">
+        <span style="flex: auto 1 1"></span>
+
+        <button type="button" style="margin-right: 16px" color="secondary" mat-raised-button>
+          <mat-icon style="margin-right: 8px; vertical-align: middle;">cloud_download
+          </mat-icon>
+          <span style="vertical-align: middle;">Descargar</span>
+        </button>
+      </div> -->
+
+
+      <div class="mat-elevation-z8" style="border-radius: 10px 10px 10px 10px">
+        <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+          <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+
+            <ng-container matColumnDef="index" sticky>
+              <th mat-header-cell style="padding:0px 25px; border-right: 1px solid gainsboro;" *matHeaderCellDef>N°
+              </th>
+              <td mat-cell style="padding:0px 25px; border-right: 1px solid gainsboro;"
+                *matCellDef="let raw; let i = index">
+                {{i+1}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell style="padding:0px 8px; min-width:65px; border-right: 1px solid gainsboro;"
+                *matHeaderCellDef>
+                Item</th>
+              <td mat-cell style="padding:0px 8px; border-right: 1px solid gainsboro;" *matCellDef="let raw">
+                {{raw.name}}
+                <span class="w3-small" *ngIf="raw.type">
+                  <ul>
+                    <li>Entrada: {{raw.appetizer ? raw.appetizer.name : '---'}}</li>
+                    <li>Segundo: {{raw.mainDish ? raw.mainDish.name : '---'}}</li>
+                    <li>Postre: {{raw.dessert ? raw.dessert.name : '---'}}</li>
+                  </ul>
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell style="padding:0px 8px; min-width:65px;" *matHeaderCellDef>
+                Cantidad</th>
+              <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                <span style="font-weight: bold;">{{raw.quantity | number : '.2'}}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          </table>
+        </div>
+        <mat-paginator style="border-radius: 0px 0px 10px 10px" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+      </div>
+
+
+
+
+      <ng-template #default>
+        <div class="w3-container w3-center  w3-round-large mat-elevation-z8 w3-margin-top w3-margin-bottom">
+          <h2 style="font-family: Raleway; color: dimgray">
+            No hay resultados
+          </h2>
+        </div>
+      </ng-template>
+
+    </ng-container>
+
+    <ng-template #defaultUser>
+      <p class="mat-h2" style="font-family: Raleway; color: #2b2b2b">Cargando credenciales ...</p>
+    </ng-template>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="end" style="margin-bottom: -16px;">
+    <button mat-stroked-button style="margin:0em 0.5em 0em 0em" mat-dialog-close>Cerrar</button>
+  </mat-dialog-actions>
+</div>

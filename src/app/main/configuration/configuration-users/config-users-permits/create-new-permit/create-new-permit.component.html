@@ -1,0 +1,123 @@
+<h2 class="ms-font-rubik ms-color-2b" style="font-size:1.2em" mat-dialog-title>
+  <mat-icon style="vertical-align:middle">assignment_ind</mat-icon> Crear Nuevo Nivel
+</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-vertical-stepper #stepperNewPermit class="w3-margin-top w3-round-large">
+    <mat-step [stepControl]="detailsFormGroup" errorMessage="Complete todos los campos requeridos" state="done">
+
+      <ng-template matStepLabel>Detalle de nivel</ng-template>
+
+      <form [formGroup]="detailsFormGroup">
+        <mat-form-field class="w3-margin-right w3-block" style="max-width:200px" appearance="outline">
+          <mat-label>Nombre del nivel</mat-label>
+          <input matInput type="text" placeholder="Escriba..." formControlName="name" autocomplete="off">
+          <mat-hint *ngIf="nameExist$ | async">
+            El nombre: <strong>{{detailsFormGroup.value['name']}}</strong> , ya existe
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="w3-margin-top">
+          <button mat-stroked-button matStepperNext>Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="permitsConfigurationFormGroup" errorMessage="Complete todos los campos requeridos"
+      state="done">
+
+      <ng-template matStepLabel>Configuración de permisos</ng-template>
+
+      <form [formGroup]="permitsConfigurationFormGroup">
+        <div class="ms-config-wraper">
+
+          <div style="margin-right:1em">
+
+            <mat-checkbox formControlName="kitchenSection" (change)="$event ? masterKitchenToggle() : null"
+              [checked]="kitchenSelection.hasValue() && isAllKitchenSelected()"
+              [indeterminate]="kitchenSelection.hasValue() && !isAllKitchenSelected()"><strong>Cocina</strong>
+            </mat-checkbox><br>
+            <ng-container *ngFor="let key of kitchenKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? kitchenSelection.toggle(key['value']):null"
+                [checked]="kitchenSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+            <mat-checkbox formControlName="warehouseSection" (change)="$event ? masterWarehouseToggle() : null"
+              [checked]="warehouseSelection.hasValue() && isAllWarehouseSelected()"
+              [indeterminate]="warehouseSelection.hasValue() && !isAllWarehouseSelected()"><strong>Almacén</strong>
+            </mat-checkbox><br>
+            <ng-container *ngFor="let key of warehouseKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? warehouseSelection.toggle(key['value']):null"
+                [checked]="warehouseSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+            <mat-checkbox formControlName="salesSection" (change)="$event ? masterSalesToggle() : null"
+              [checked]="salesSelection.hasValue() && isAllSalesSelected()"
+              [indeterminate]="salesSelection.hasValue() && !isAllSalesSelected()">
+              <strong>VEntas</strong></mat-checkbox><br>
+            <ng-container *ngFor="let key of salesKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? salesSelection.toggle(key['value']):null"
+                [checked]="salesSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+            <mat-checkbox formControlName="adminSection" (change)="$event ? masterAdminToggle() : null"
+              [checked]="adminSelection.hasValue() && isAllAdminSelected()"
+              [indeterminate]="adminSelection.hasValue() && !isAllAdminSelected()"><strong>Administración</strong>
+            </mat-checkbox><br>
+            <ng-container *ngFor="let key of adminKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? adminSelection.toggle(key['value']):null"
+                [checked]="adminSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+            <mat-checkbox formControlName="thirdPartiesSection" (change)="$event ? masterThirdPartiesToggle() : null"
+              [checked]="thirdPartiesSelection.hasValue() && isAllThirdPartiesSelected()"
+              [indeterminate]="thirdPartiesSelection.hasValue() && !isAllThirdPartiesSelected()"><strong>Terceras Personas</strong>
+            </mat-checkbox><br>
+            <ng-container *ngFor="let key of thirdPartiesKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? thirdPartiesSelection.toggle(key['value']):null"
+                [checked]="thirdPartiesSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+            <mat-checkbox formControlName="configurationSection" (change)="$event ? masterConfigurationToggle() : null"
+              [checked]="configurationSelection.hasValue() && isAllConfigurationSelected()"
+              [indeterminate]="configurationSelection.hasValue() && !isAllConfigurationSelected()"><strong>Configuración</strong>
+            </mat-checkbox><br>
+            <ng-container *ngFor="let key of configurationKeys">
+              <mat-checkbox formControlName="{{key['value']}}" (click)="$event.stopPropagation()"
+                (change)="$event ? configurationSelection.toggle(key['value']):null"
+                [checked]="configurationSelection.isSelected(key['value'])">{{key['name']}}</mat-checkbox><br>
+            </ng-container>
+            <p class="w3-margin-top"></p>
+
+          </div>
+        </div>
+
+        <div class="w3-margin-top">
+          <button mat-stroked-button matStepperPrevious class="w3-margin-right w3-margin-top">Anterior</button>
+        </div>
+
+      </form>
+    </mat-step>
+  </mat-vertical-stepper>
+
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" style="margin-bottom: -16px">
+  <button mat-raised-button class="w3-margin-right" mat-dialog-close color="PRIMARY">Cancelar</button>
+  <button mat-raised-button color="secondary" (click)="create()"
+    [disabled]="!permitsConfigurationFormGroup.valid || (nameExist$ | async)">Crear</button>
+</mat-dialog-actions>

@@ -1,0 +1,137 @@
+<h2 class="ms-font-rubik ms-color-2b" style="font-size:1.2em" mat-dialog-title>
+  <mat-icon style="vertical-align:middle">account_circle</mat-icon> Crear Nuevo Usuario
+</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content class="w3-roung-large">
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-vertical-stepper #stepperFRED class="w3-margin-top w3-round-large">
+    <mat-step [stepControl]="personalDataFormGroup" errorMessage="Complete todos los campos requeridos" state="done">
+
+      <ng-template matStepLabel>Datos personales</ng-template>
+
+      <form [formGroup]="personalDataFormGroup">
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">account_circle</mat-icon> -->
+          <input matInput class="w3-white" type="text" placeholder="Escriba..." formControlName="name"
+            autocomplete="off">
+          <mat-hint>
+            <strong>requerido *</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">account_circle</mat-icon> -->
+          <input matInput type="text" placeholder="Escriba..." formControlName="lastname" autocomplete="off">
+          <mat-hint>
+            <strong>requerido *</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>N° DNI</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">account_circle</mat-icon> -->
+          <input matInput type="text" placeholder="Escriba..." formControlName="dni" autocomplete="off">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Correo</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">email</mat-icon> -->
+          <input matInput type="text" placeholder="Escriba..." formControlName="email" autocomplete="off">
+          <mat-hint *ngIf="(emailExist$ | async)">
+            <strong>Este correo ya existe en el sistema.</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Celular</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">phone_iphone</mat-icon> -->
+          <input matInput type="number" placeholder="Escriba..." formControlName="phone" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Password</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">vpn_key</mat-icon> -->
+          <mat-icon matSuffix style="vertical-align:middle" *ngIf="visibility === 'password'"
+            (click)="toggleVisibility()">visibility</mat-icon>
+          <mat-icon matSuffix style="vertical-align:middle" *ngIf="visibility === 'text'" (click)="toggleVisibility()">
+            visibility_off</mat-icon>
+          <input matInput [type]="visibility" placeholder="Escriba..." formControlName="password" autocomplete="off">
+          <mat-hint>
+            <strong>requerido *</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="w3-margin-top">
+          <button mat-stroked-button matStepperNext>Siguiente</button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="jobDataFormGroup" errorMessage="Complete todos los campos requeridos" state="done">
+
+      <ng-template matStepLabel>Datos de trabajo</ng-template>
+
+      <form [formGroup]="jobDataFormGroup">
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Puesto/Cargo</mat-label>
+          <!-- <mat-icon matPrefix style="vertical-align:middle;margin-right:0.5em">work</mat-icon> -->
+          <input matInput type="text" placeholder="Escriba..." formControlName="jobTitle" autocomplete="off">
+          <mat-hint>
+            <strong>requerido *</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field class="w3-margin-right w3-block w3-margin-bottom" style="max-width:200px" appearance="outline">
+          <mat-label>Nivel/Permisos</mat-label>
+
+          <input matInput type="text" placeholder="Seleccione..." formControlName="permit" autocomplete="off"
+            [matAutocomplete]="autoPermits">
+
+          <mat-autocomplete #autoPermits="matAutocomplete" [displayWith]="showSelectedPermit">
+            <mat-option *ngFor="let permit of filteredPermits$ | async" [value]="permit">
+              {{permit['name']}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-hint>
+            <strong>requerido *</strong>
+          </mat-hint>
+          <mat-error>
+            <strong>requerido *</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div>
+          <button mat-stroked-button matStepperPrevious class="w3-margin-right w3-margin-top">Anterior</button>
+        </div>
+
+      </form>
+    </mat-step>
+  </mat-vertical-stepper>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" style="margin-bottom: -16px">
+  <button mat-raised-button mat-dialog-close color="PRIMARY">Cancelar</button>
+  <button mat-raised-button color="secondary" (click)="create()"
+    [disabled]="!personalDataFormGroup.valid || !jobDataFormGroup.valid || (emailExist$ | async) || loading">Crear</button>
+</mat-dialog-actions>

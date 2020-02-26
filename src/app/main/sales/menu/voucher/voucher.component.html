@@ -1,0 +1,18 @@
+<div>
+    <h2 style="font-size:1.2em; font-family: Raleway;" mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">local_printshop</mat-icon>
+        Imprimir comprobante
+    </h2>
+    <mat-divider></mat-divider>
+</div>
+
+<div mat-dialog-content>
+    <p>Está seguro de imprimir el comprobante:</p>
+    <p>Factura {{data['documentSerial']}} - {{data['documentCorrelative']}}</p>
+</div>
+
+<div class="contain" style="margin-top: 20px;">
+    <button mat-raised-button mat-dialog-close color="PRIMARY">Cancelar</button>
+    <button class="w3-margin-left" mat-raised-button color="secondary" (click)="save()">Sí,
+        Imprimir</button>
+</div>

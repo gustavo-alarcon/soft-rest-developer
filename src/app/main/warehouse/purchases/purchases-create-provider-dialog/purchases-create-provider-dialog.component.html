@@ -1,0 +1,144 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">add_circle</mat-icon> Crear proveedor
+</div>
+<mat-progress-bar mode="indeterminate" *ngIf="savingCustomer$ | async"></mat-progress-bar>
+
+<mat-dialog-content>
+  <form [formGroup]="dataFormGroup">
+    <div class="w3-row">
+      <div class="w3-third">
+        <div class="w3-margin">
+          <span class="ms-color-11 mat-subheading-1 w3-margin-bottom"><b>Información</b></span>
+          <mat-divider class="w3-margin-bottom w3-block"></mat-divider>
+
+          <mat-form-field class="w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+            <mat-label>RUC</mat-label>
+            <input matInput type="number" step="1" formControlName="ruc" autocomplete="off">
+            <mat-progress-bar mode="indeterminate" *ngIf="rucLoading$ | async">
+            </mat-progress-bar>
+            <mat-hint>Requerido *</mat-hint>
+            <mat-error *ngIf="!dataFormGroup.valid">RUC requerido *</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+            <mat-label>Razón social</mat-label>
+            <input matInput type="text" formControlName="name" autocomplete="off">
+            <mat-hint>Requerido *</mat-hint>
+            <mat-error *ngIf="!dataFormGroup.valid">Razón social requerida *</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+            <mat-label>Dirección</mat-label>
+            <input matInput type="text" formControlName="address" autocomplete="off">
+            <mat-hint>Requerido *</mat-hint>
+            <mat-error *ngIf="!dataFormGroup.valid">Dirección requerida *</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+            <mat-label>Cuenta de detracciones</mat-label>
+            <input matInput type="number" step="1" formControlName="detractionAccount" autocomplete="off">
+            <mat-hint>Opcional *</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput type="text" formControlName="phone" autocomplete="off">
+            <mat-hint>Opcional *</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="w3-third">
+        <div class="w3-margin">
+          <span class="ms-color-11 mat-subheading-1 w3-margin-bottom"><b>Cuentas de deposito</b></span>
+          <mat-divider class="w3-margin-bottom"></mat-divider>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Banco</mat-label>
+            <mat-select formControlName="bank">
+              <mat-option *ngFor="let item of bankList" [value]="item">{{item}}</mat-option>
+            </mat-select>
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Tipo de cuenta</mat-label>
+            <mat-select formControlName="type">
+              <mat-option *ngFor="let item of bankAccountTypes" [value]="item">{{item}}</mat-option>
+            </mat-select>
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Número de cuenta</mat-label>
+            <input matInput type="text" formControlName="accountNumber" placeholder="Escriba..." autocomplete="off">
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <button mat-raised-button class="w3-block" color="secondary" (click)="addBank()">
+            <mat-icon>credit_card</mat-icon> Agregar cuenta
+          </button>
+
+          <div class="w3-block">
+            <ol>
+              <li *ngFor="let item of bankAccounts" class="w3-small">
+                {{item.bank}} / {{item.type}} / {{item.accountNumber}}
+                <button mat-icon-button color="warn" (click)="removeBank(item.index)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div class="w3-third">
+        <div class="w3-margin">
+          <span class="ms-color-11 mat-subheading-1 w3-margin-bottom"><b>Contactos</b></span>
+          <mat-divider class="w3-margin-bottom"></mat-divider>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Nombres y Apellidos</mat-label>
+            <input matInput type="text" formControlName="contactName" placeholder="Escriba..." autocomplete="off">
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Celular</mat-label>
+            <input matInput type="text" formControlName="contactPhone" placeholder="Escriba..." autocomplete="off">
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="w3-margin-bottom w3-block animated fadeInRight" appearance="outline">
+            <mat-label>Correo</mat-label>
+            <input matInput type="text" formControlName="contactMail" placeholder="Escriba..." autocomplete="off">
+            <mat-hint>Opcional</mat-hint>
+          </mat-form-field>
+
+          <button mat-raised-button class="w3-block" color="secondary" (click)="addContact()">
+            <mat-icon>contacts</mat-icon> Agregar contacto
+          </button>
+
+          <div class="w3-block">
+            <ol>
+              <li *ngFor="let item of contactList" class="w3-small">
+                {{item.contactName}} / {{item.contactPhone ? item.contactPhone : 'Ninguno'}} /
+                {{item.contactMail ? item.contactMail : 'Ninguno'}}
+                <button mat-icon-button color="warn" (click)="removeContact(item.index)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="w3-margin-right" color="PRIMARY" mat-dialog-close>Cancelar</button>
+  <button mat-raised-button class="w3-margin-right" color="secondary" (click)="save()"
+    [disabled]="!dataFormGroup.valid || (ruc$ | async) || (savingCustomer$ | async)">Crear</button>
+</mat-dialog-actions>

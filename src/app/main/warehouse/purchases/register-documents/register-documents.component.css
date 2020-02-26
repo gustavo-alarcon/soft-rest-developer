@@ -1,0 +1,33 @@
+.parentDialog {
+    width: 100%;
+    display: flex; 
+    flex-direction:row; 
+    padding-bottom: 16px;
+}
+
+.leftChildDialog{
+    width: 40%;
+    padding-right: 16px;    
+}
+
+.rightChildDialog{
+    width: 60%;
+    padding-left: 16px;
+}
+
+@media(max-width: 930px){
+    .parentDialog {
+        display: flex; 
+        flex-direction:column; 
+    }
+    
+    .leftChildDialog{
+        width: 100%;
+        padding-right: 0;    
+    }
+    
+    .rightChildDialog{
+        width: 100%;
+        padding-left: 0
+    } 
+}

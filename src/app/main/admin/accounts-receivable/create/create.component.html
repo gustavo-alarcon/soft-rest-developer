@@ -1,0 +1,45 @@
+<div style="font-family: Raleway; max-width: 350px;">
+    <h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">add_circle</mat-icon>
+        <span class="w3-margin-left">Crear Cuenta</span>
+    </h2>
+    <mat-dialog-content>
+        <form [formGroup]="createForm">
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Usuario</mat-label>
+                <input matInput type="text" placeholder="Usuario" autocomplete="off"
+                    formControlName="user" [matAutocomplete]="autoCustomers">
+                    <mat-autocomplete #autoCustomers="matAutocomplete"
+                    [displayWith]="showCustomer">
+                    <mat-option *ngFor="let option of filteredCustomers$ | async " [value]="option">
+                        <strong>{{option['name']?option['name']:option['businessName']}}</strong>
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-hint>
+                    Requerido*
+                </mat-hint>
+            </mat-form-field>
+            <br>
+           
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Saldo Inicial</mat-label>
+                <input matInput type="number" placeholder="Saldo Inicial (S/.)"  autocomplete="off"
+                    formControlName="balance">
+                <mat-hint>
+                    Opcional*
+                </mat-hint>
+            </mat-form-field>
+
+        </form>
+        
+        
+    </mat-dialog-content>
+    <mat-dialog-actions style="margin-bottom: -16px;" align="end">
+        <button mat-stroked-button class="w3-margin-right" mat-dialog-close
+            style="background: #B70705; color: white; font-family: Raleway;">Cancelar</button>
+        <button mat-stroked-button class="w3-margin-right" (click)="save()"
+            style="background: #EE8434; color: white; font-family: Raleway;"
+            [disabled]="!createForm.valid">Crear</button>
+    </mat-dialog-actions>
+</div>

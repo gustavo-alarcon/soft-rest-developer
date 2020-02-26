@@ -1,0 +1,237 @@
+<div class="w3-section w3-margin-left w3-margin-right animated fadeInUp delay-2"
+    *ngIf="auth.userAndRole$ | async as user">
+    <div class="w3-row">
+        <div class="w3-col s0 m1 l1">
+            <p></p>
+        </div>
+        <div class="w3-col s12 m10 l10" style="min-height:86vh; font-family: Raleway;">
+            <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+                <mat-icon style="vertical-align: middle; margin-right:0.2em;margin-left:1.5em">%
+                </mat-icon> Promociones
+            </h1>
+            <mat-divider></mat-divider>
+
+            <!-- Search Form -->
+
+            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: baseline; flex-wrap: wrap ;
+                    margin-right:0.2em;margin-left:1.5em">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Filtrar</mat-label>
+                    <input [formControl]="filterControl" (keyup)="filter()" type="text" placeholder="Filtrar" matInput>
+                    <span matPrefix>
+                        <mat-icon>filter_list</mat-icon>
+                    </span>
+                </mat-form-field>
+
+                <div>
+                    <button *ngIf="user['role']['kitchenPromosCreateAction']" mat-raised-button color="secondary"
+                        type="button" (click)="onCreateNewPromo()">
+                        <mat-icon>add_circle</mat-icon>
+                        Crear Nuevo
+                    </button>
+                </div>
+
+                <div>
+                    <button *ngIf="user['role']['kitchenPromosDownloadAction']" mat-raised-button color="secondary"
+                        type="button" (click)="downloadXls()">
+                        <mat-icon>cloud_download</mat-icon>
+                        Descargar
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- Table -->
+            <div>
+                <!-- Table -->
+                <div class="w3-padding" *ngIf="promoData$ | async">
+
+                    <div style="height: auto; width: 100%; overflow: auto; border-radius: 20px 20px 0 0"
+                        class="mat-elevation-z8">
+                        <table mat-table [dataSource]="promosTableDataSource"
+                            style="width: 100%; text-align: center !important; width: 100%; font-family: Raleway;">
+
+                            <!-- index -->
+                            <ng-container matColumnDef="index" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;"
+                                    class="w3-center w3-padding w3-border-right">
+                                    N°</th>
+                                <td mat-cell *matCellDef="let element; let i=index"
+                                    style="color:#2b2b2b; padding-left:0">{{1+i + (promoTablePaginator.pageIndex * promoTablePaginator.pageSize)}}</td>
+                            </ng-container>
+
+                            <!-- createdAt -->
+                            <ng-container matColumnDef="createdAt" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef class="w3-center w3-padding w3-border-right"
+                                    style="text-align: center; padding: 1em;
+                                        background: #C8C8C8;color: #828282;font-size: 0.9em; border-left:1px solid #B9B9B9; padding-left: 8px">
+                                    Fecha de Creación</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">
+                                    {{formatDate(element.createdAt) | date:'dd/MM/yyyy'}}</td>
+                            </ng-container>
+
+                            <!-- name -->
+                            <ng-container matColumnDef="name" sticky class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; min-width: 100px;
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Nombre</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding: 1em">{{element.name}}</td>
+                            </ng-container>
+
+                            <!-- recipesRecipe -->
+                            <ng-container matColumnDef="recipesRecipe" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; min-width: 170px;
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Productos </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: left; color:#2b2b2b;">
+                                    <ul>
+                                        <li *ngFor="let product of element.products">
+                                            {{product.name |titlecase}}
+                                        </li>
+                                    </ul>
+                                </td>
+                            </ng-container>
+
+                            <!-- state -->
+                            <ng-container matColumnDef="state" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Estado</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding: 1em">{{element.state}}</td>
+                            </ng-container>
+
+                            <!-- dateRange -->
+                            <ng-container matColumnDef="dateRange" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Rango de Fechas</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; white-space: nowrap; padding:1em">
+                                    {{element.validityPeriod == 'Definido' ? (formatDate(element.dateRange.begin)| date:'dd/MM/yyyy'): null }}
+                                    {{element.validityPeriod == 'Definido' ? '-': 'Indefinido'}}
+                                    {{element.validityPeriod == 'Definido' ? (formatDate(element.dateRange.end)| date:'dd/MM/yyyy'): null}}
+                                </td>
+                            </ng-container>
+
+                            <!-- realPrice -->
+                            <ng-container matColumnDef="realPrice" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Precio de Venta</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; white-space: nowrap; padding: 1em">
+                                    {{element.realPrice | currency : 'S/. '}}</td>
+                            </ng-container>
+
+                            <!-- promoPrice -->
+                            <ng-container matColumnDef="promoPrice" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Precio Promocional </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; white-space: nowrap; padding: 1em">
+                                    {{element.price | currency : 'S/. '}}</td>
+                            </ng-container>
+
+                            <!-- disccount -->
+                            <ng-container matColumnDef="disccount" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    % DCTO</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b; white-space: nowrap; padding: 1em">
+                                    {{((element.realPrice-element.price)/element.realPrice*100.0).toFixed(2)}} %</td>
+                            </ng-container>
+
+                            <!-- units -->
+                            <ng-container matColumnDef="units" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Unidades Disponibles</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">
+                                    {{element.quantity == 'Definido' ? element.units: 'Ilimitado'}}</td>
+                            </ng-container>
+
+                            <!-- soldUnits -->
+                            <ng-container matColumnDef="soldUnits" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Unidades Vendidas</th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">{{element.soldUnits}}</td>
+                            </ng-container>
+
+                            <!-- createdBy -->
+                            <ng-container matColumnDef="createdBy" class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="text-align: center; 
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Creado por: </th>
+                                <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">
+                                    {{element.createdBy.displayName}}</td>
+                            </ng-container>
+
+                            <!-- actions -->
+                            <ng-container matColumnDef="actions" stickyEnd class="w3-border-bottom w3-border-indigo">
+                                <th mat-header-cell *matHeaderCellDef
+                                    style="width: 100px; padding-left: 8px;
+                                    background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;"
+                                    class="w3-center w3-padding w3-border-right">
+                                    Acciones</th>
+                                <td mat-cell *matCellDef="let element; let i=index"
+                                    style="color:#2b2b2b; padding-right:0">
+                                    <button mat-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button *ngIf="user['role']['kitchenPromosStateActions'] && element.state == 'Inactivo'"
+                                            mat-menu-item (click)="changeOfferState(element, 'Activar')">Activar</button>
+                                        <button mat-menu-item *ngIf="user['role']['kitchenPromosStateActions'] && element.state == 'Publicado'" (click)="changeOfferState(element, 'Inactivar')">Inactivar</button>
+                                        <button *ngIf="user['role']['kitchenPromosEditAction']"
+                                            mat-menu-item (click)="onEditPromo(element)">Editar</button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="promosTableDisplayedColumns"
+                                style="text-align-last: center;"></tr>
+                            <tr mat-row *matRowDef="let row; columns: promosTableDisplayedColumns;"></tr>
+
+
+                        </table>
+                    </div>
+
+                    <mat-paginator #promoTablePaginator [pageSizeOptions]="[5,10,25]" fixed class="mat-elevation-z8"
+                        style="border-radius: 0 0 20px 20px;">
+                    </mat-paginator>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="w3-col s0 m1 l1">
+            <p></p>
+        </div>
+    </div>
+</div>

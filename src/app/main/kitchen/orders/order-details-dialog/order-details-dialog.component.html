@@ -1,0 +1,66 @@
+<div mat-dialog-title>
+    <h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">restaurant</mat-icon>
+        <span class="w3-margin-left">Pedidos</span>
+    </h2>
+</div>
+
+<div mat-dialog-content style="min-width:40vw">
+
+    <div class="w3-padding">
+        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <span>Orden Nro. {{data.orderCorrelative}}</span>
+            <button mat-raised-button color="secondary" type="button" (click)="downloadXls()">
+                <mat-icon>cloud_download</mat-icon>
+                Descargar
+            </button>
+        </div>
+        <div style="height: auto; width: 100%; overflow: auto; border-radius: 10px; margin-top: 16px;">
+            <table mat-table [dataSource]="ordersTableDataSource"
+                style="width: 100%; text-align: center !important; width: 100%; font-family: Raleway;">
+
+                <!-- index -->
+                <ng-container matColumnDef="index" class="w3-border-bottom w3-border-indigo">
+                    <th mat-header-cell *matHeaderCellDef
+                        style="text-align: center; 
+                        background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;"
+                        class="w3-center w3-padding w3-border-right">
+                        N°</th>
+                    <td mat-cell *matCellDef="let element; let i=index" style="color:#2b2b2b"
+                        class="w3-border-bottom w3-center w3-border-left">{{i+1}}</td>
+                </ng-container>
+
+                <!-- amount -->
+                <ng-container matColumnDef="amount" class="w3-border-bottom w3-border-indigo">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-padding w3-border-right"
+                        style="text-align: center; 
+                            background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px">
+                        Cantidad</th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">{{element.amount}}</td>
+                </ng-container>
+
+                <!-- name -->
+                <ng-container matColumnDef="name" sticky class="w3-border-bottom w3-border-indigo">
+                    <th mat-header-cell *matHeaderCellDef
+                        style="text-align: center; 
+                        background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; padding-left: 8px"
+                        class="w3-center w3-padding w3-border-right">
+                        Nombre</th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;">{{element.name}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="ordersTableDisplayedColumns" style="text-align-last: center;"></tr>
+                <tr mat-row *matRowDef="let row; columns: ordersTableDisplayedColumns;"></tr>
+
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="basic" type="button" class="w3-margin" mat-dialog-close>Cancelar</button>
+</div>

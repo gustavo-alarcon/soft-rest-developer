@@ -1,0 +1,81 @@
+<div style="font-family: Raleway; max-width: 350px;">
+    <h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">remove_circle</mat-icon>
+        <span *ngIf="!this.data.edit" class="w3-margin-left">Retirar dinero</span>
+        <span *ngIf="this.data.edit" class="w3-margin-left">Editar Egreso</span>
+    </h2>
+    <mat-dialog-content>
+        <form *ngIf="!confirm" [formGroup]="removeForm">
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Importe retirado</mat-label>
+                <input matInput type="number" placeholder="Importe retirado S/." autocomplete="off"
+                    formControlName="expenses">
+                <mat-hint>
+                    Requerido*
+                </mat-hint>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Tipo de egreso</mat-label>
+                <mat-select formControlName="typeExpenses">
+                    <mat-option *ngFor="let type of typesExpenses" [value]="type">
+                        {{type}}
+                    </mat-option>
+                </mat-select>
+                <mat-hint>
+                    Requerido*
+                </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Tipo de pago</mat-label>
+                <mat-select formControlName="typePayment">
+                    <mat-option *ngFor="let type of typesPayment" [value]="type">
+                        {{type}}
+                    </mat-option>
+                </mat-select>
+                <mat-hint>
+                    Requerido*
+                </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput placeholder="Descripción" formControlName="description"></textarea>
+                <mat-hint>
+                    Opcional*
+                </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field class="w3-block w3-margin-bottom" appearance="outline">
+                <mat-label>Responsable</mat-label>
+                <mat-select formControlName="user">
+                    <mat-option *ngFor="let user of dbs.users$ | async" [value]="user">
+                        {{user['displayName']}}
+                    </mat-option>
+                </mat-select>
+                <mat-hint>
+                    Requerido*
+                </mat-hint>
+            </mat-form-field>
+        </form>
+        <div *ngIf="confirm">
+            <p *ngIf="data['edit']">¿Estás seguro de editar el importe: S/. {{removeForm.get('expenses').value}}?</p>
+            <p *ngIf="!data['edit']">¿Estás seguro de retirar el importe: S/. {{removeForm.get('expenses').value}}?</p>
+            <p>Decripción:{{removeForm.get('description').value}}</p>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions style="margin-bottom: -16px;" align="end">
+        <button mat-raised-button class="w3-margin-right" mat-dialog-close
+            color="PRIMARY">Cancelar</button>
+        <button *ngIf="!confirm" mat-raised-button class="w3-margin-right" (click)="confirm = true"
+            color="secondary"
+            [disabled]="!removeForm.valid">Aceptar</button>
+        <button *ngIf="confirm && !data.edit" mat-raised-button class="w3-margin-right" mat-dialog-close
+            color="secondary" (click)="save()">Sí, retirar</button>
+        <button *ngIf="confirm && data.edit" mat-raised-button class="w3-margin-right" mat-dialog-close
+            color="secondary" (click)="edit()">Sí, editar</button>
+
+    </mat-dialog-actions>
+</div>

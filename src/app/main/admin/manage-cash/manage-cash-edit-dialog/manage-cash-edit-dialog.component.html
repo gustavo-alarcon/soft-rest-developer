@@ -1,0 +1,51 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">edit</mat-icon> Editar caja
+</div>
+<mat-progress-bar mode="indeterminate" ></mat-progress-bar>
+
+<mat-dialog-content>
+  <form [formGroup]="dataFormGroup">
+
+    <span class="ms-color-11 mat-subheading-1 w3-margin-bottom"><b>Información</b></span>
+    <mat-divider class="w3-margin-bottom"></mat-divider>
+    <mat-form-field class="w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput type="text" formControlName="name" placeholder="Escriba..." autocomplete="off">
+      <mat-progress-bar mode="indeterminate" *ngIf="nameLoading$ | async">
+      </mat-progress-bar>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Nombre requerido *</mat-error>
+    </mat-form-field><br>
+
+    <mat-form-field class="w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Supervisor de caja</mat-label>
+      <mat-icon matSuffix>arrow_drop_down</mat-icon>
+      <input matInput type="text" formControlName="supervisor" [matAutocomplete]="supervisorAuto"
+        placeholder="Escriba..." autocomplete="off">
+      <mat-autocomplete #supervisorAuto="matAutocomplete" [displayWith]="showUser">
+        <mat-option *ngFor="let item of users$ | async" [value]="item">
+          {{item.displayName}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Seleccione un usuario *</mat-error>
+    </mat-form-field><br>
+
+    <mat-form-field class="w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" required placeholder="***" formControlName="password">
+      <button mat-icon-button matSuffix (click)="hide = !hide">
+        <mat-icon>{{ hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+      </button>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Asigne una contraseña *</mat-error>
+    </mat-form-field><br>
+  </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="w3-margin-right" color="PRIMARY" mat-dialog-close>Cancelar</button>
+  <button mat-raised-button class="w3-margin-right" color="secondary" (click)="save()"
+    [disabled]="!dataFormGroup.valid  || (savingCash$ | async)">Crear</button>
+</mat-dialog-actions>

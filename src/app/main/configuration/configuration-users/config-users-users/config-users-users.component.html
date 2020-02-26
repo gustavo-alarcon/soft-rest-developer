@@ -1,0 +1,111 @@
+<div class="w3-section">
+  <div style="display: flex; flex-wrap: wrap; align-items: center;">
+    <button mat-icon-button (click)="toggleSidenav()" class="w3-margin-right">
+      <mat-icon>keyboard_return</mat-icon>
+    </button>
+    <h2 class="ms-font-rubik ms-color-2b" style="font-size:1.5em;">
+      <mat-icon style="vertical-align:middle; font-size: 30px; width:30px; height: 30px">format_list_bulleted</mat-icon>
+      Lista de usuarios
+    </h2>
+  </div>
+
+  <div style="display: flex; flex-direction: row; flex-wrap: wrap; place-content: space-between; align-items: center;">
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center;">
+      <div>
+        <button mat-raised-button color="secondary" (click)="createNewUser()">
+          <mat-icon>add_circle</mat-icon> Crear
+        </button>
+      </div>
+      <div>
+        <mat-form-field class="w3-margin-left w3-block" style="margin-right:0.5em;max-width:30vw" appearance="standard">
+          <mat-label>Buscar</mat-label>
+          <mat-icon matPrefix style="vertical-align:middle">search</mat-icon>
+          <input matInput type="text" placeholder="Escribir..." autocomplete="off" [formControl]="formControlSearch">
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <button mat-raised-button class="w3-margin-right" color="secondary" 
+        (click)="downloadXlsUsers()" [disabled]="!dataSource.data.length">
+        <mat-icon style="vertical-align: middle;">cloud_download</mat-icon> Descargar
+      </button>
+    </div>
+  </div>
+
+  <br>
+  <ng-container *ngIf="filteredUsers$ | async; else loading">
+    <div class="mat-elevation-z8 w3-margin-top" style="border-radius: 10px 10px 0px 0px">
+      <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+        <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef style="padding:1em 1em; min-width:30px">N°</th>
+            <td mat-cell *matCellDef="let user; let i = index" style="color:#2b2b2b; padding:1em 1em">
+              {{i+1}}
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="displayName" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding:0.5em 0.5em">Usuario</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em">
+              {{user['displayName']}}
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef style="padding:0.5em 0.5em">Correo</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em">
+              <a href="mailto:{{user['email']}}">{{user['email']}}</a>
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef style="padding:0.5em 0.5em">Celular</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em">
+              {{user['phone']}}
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="permit">
+            <th mat-header-cell *matHeaderCellDef style="padding:0.5em 0.5em">Nivel</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em">
+              {{user['role']['name']}}
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="jobTitle">
+            <th mat-header-cell *matHeaderCellDef style="padding:0.5em 0.5em">Puesto/Cargo</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em">
+              {{user['jobTitle']}}
+            </td>
+          </ng-container>
+
+          <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo" matColumnDef="edit" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef style="padding:0.5em 0.5em; border-left: 1px solid gray">Editar</th>
+            <td mat-cell *matCellDef="let user" style="color:#2b2b2b; padding:0.5em 0.5em; border-left: 2px solid lightgray">
+              <button mat-icon-button color="secondary" (click)="editUser(user)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <ng-container *ngIf="auth.user$ | async as userdbs">
+                <button mat-icon-button color="warn" (click)="deleteUser(user)"
+                  [disabled]="user['uid'] === userdbs.uid">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+      </div>
+      <mat-paginator #paginatorUsers class="w3-round-large" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
+
+</div>

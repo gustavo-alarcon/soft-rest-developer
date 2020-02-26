@@ -1,0 +1,93 @@
+<h2 style="font-size:1.2em; font-family: Raleway; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+    mat-dialog-title>
+    <mat-icon style="vertical-align: middle;">list</mat-icon>
+    <span class="w3-margin-left">Lista</span>
+</h2>
+
+<mat-dialog-content style="min-width: 74vw;">
+    <div class="mat-elevation-z8 w3-margin-top" style="border-radius: 10px ; margin: 2vh 0;"
+        *ngIf="list$ | async">
+        <div class="w3-round-large" style="overflow:auto; border-radius: 10px 10px 0 0;">
+            <table mat-table [dataSource]="dataSource" style="width: 100%; font-family: Raleway;">
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center" matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; width: 4%;">
+                        No. </th>
+                    <td mat-cell *matCellDef="let element; let i = index" style="color:#2b2b2b; padding-left: 0;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        {{i+1}}
+                    </td>
+                </ng-container>
+
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center" matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;">
+                        Fecha Registro </th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b; padding: 0.5em 1em;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        <span>{{element['createdAt'].toMillis() | date: 'dd/MM/yyyy'}}</span><br>
+                        <span>{{element['createdAt'].toMillis() | date: 'hh:mm a'}}</span></td>
+                </ng-container>
+
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                    matColumnDef="numberDocument">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;">
+                        Nro de Documento
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;padding: 0.5em 1em;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        {{element['description']}}</td>
+                </ng-container>
+
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                    matColumnDef="cashSale">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; width: 15%;">
+                        Importe </th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;padding: 0.5em 1em;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        S/. {{element['amount']| number: '.2'}}
+                    </td>
+                </ng-container>
+
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center"
+                    matColumnDef="products">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;">
+                        Lista items
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;padding: 0.5em 1em;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        <button mat-raised-button style="background: #EE8434; color: white"
+                            (click)="viewProducts(element['orderList'])">
+                            <mat-icon style="vertical-align: middle;">format_list_bulleted</mat-icon>
+                            Productos
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container class="mat-elevation-z8 w3-border-bottom w3-border-indigo w3-center" matColumnDef="user">
+                    <th mat-header-cell *matHeaderCellDef class="w3-center w3-border-left"
+                        style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9;">
+                        Responsable </th>
+                    <td mat-cell *matCellDef="let element" style="color:#2b2b2b;padding: 0.5em 1em;"
+                        class="w3-border-bottom w3-center w3-border-left">
+                        {{element['createdBy']['displayName']}} </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator class="w3-round-large" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions style="margin-bottom: -16px;" align="end">
+    <button mat-stroked-button class="w3-margin-right" mat-dialog-close
+        style="background: #B70705; color: white; font-family: Raleway;">Cancelar</button>
+</mat-dialog-actions>

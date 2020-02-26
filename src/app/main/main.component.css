@@ -1,0 +1,61 @@
+.title {
+    margin-left: 1em;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 3.5vh;
+    line-height: 5vh;
+    color: #B70705;
+}
+
+.redText {
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1em;
+    line-height: 1.3em;
+    color: #B70705;
+}
+
+::ng-deep .mat-expansion-panel-header {
+    height: 50px !important;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+    color: #B70705 !important;
+}
+
+.sign-button {
+    color: white;
+    background-color: #B70705;
+    text-align: center;
+    margin: 0 10px;
+    padding: 8px 15px;
+    font-family: Raleway;
+    font-weight: 600;
+    font-size: 0.8em;
+    line-height: 1.2em;
+}
+
+.sentence {
+    max-width: 700px;
+    font-family: Gloria Hallelujah;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 6vh;
+    line-height: 9vh;
+    text-align: center;
+    color: rgba(183, 7, 5, 0.35);
+}
+
+@media(max-width:600px) {
+    .sentence {
+        min-width: 50vh;
+        font-size: 5vh;
+        line-height: 8vh;
+    }
+}

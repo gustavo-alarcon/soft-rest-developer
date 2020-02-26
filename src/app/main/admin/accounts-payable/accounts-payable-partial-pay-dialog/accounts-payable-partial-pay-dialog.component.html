@@ -1,0 +1,62 @@
+<div class="ms-font-montserrat mat-title ms-color-11">
+  <mat-icon class="ms-icons-color" style="vertical-align:middle">gavel</mat-icon> Pago parcial
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" ></mat-progress-bar>
+
+<mat-dialog-content style="max-width:300px">
+
+  <form [formGroup]="dataFormGroup">
+    <p class="ms-font-montserrat ms-color-11 mat-body">El monto a pagar será dirigido a la caja seleccionada *</p>
+
+    <mat-form-field class="ms-fill w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Caja origen</mat-label>
+      <mat-icon matSuffix>arrow_drop_down</mat-icon>
+      <input matInput type="text" formControlName="cash" [matAutocomplete]="cashAuto" placeholder="Nombre..."
+        autocomplete="off">
+      <mat-autocomplete #cashAuto="matAutocomplete" [displayWith]="showCash">
+        <mat-option *ngFor="let item of cashes$ | async" [value]="item" [disabled]="!item.open">
+          {{item.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Seleccione una caja *</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="ms-fill w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Importe (S/.)</mat-label>
+      <input matInput type="number" [min]="0" formControlName="import" autocomplete="off"
+        [placeholder]="currentIndebt | currency : 'S/.'">
+      <mat-progress-bar mode="indeterminate" *ngIf="import$ | async"></mat-progress-bar>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Debe asignar una cantidad *</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="ms-fill w3-margin-right w3-margin-bottom w3-block" appearance="outline">
+      <mat-label>Tipo de pago</mat-label>
+      <mat-select formControlName="paymentType">
+        <mat-option *ngFor="let item of paymentTypes" [value]="item">{{item}}</mat-option>
+      </mat-select>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Seleccione un tipo de pago*</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="ms-fill w3-margin-right w3-margin-bottom w3-block" appearance="outline"
+      *ngIf="dataFormGroup.value['paymentType'] === 'TRANSFERENCIA'">
+      <mat-label>Cuenta de origen</mat-label>
+      <mat-select formControlName="originAccount">
+        <mat-option *ngFor="let item of originAccounts" [value]="item">{{item}}</mat-option>
+      </mat-select>
+      <mat-hint>Requerido *</mat-hint>
+      <mat-error *ngIf="!dataFormGroup.valid">Seleccione una cuenta de origen*</mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="w3-margin-right" color="PRIMARY" mat-dialog-close>Cancelar</button>
+  <button mat-raised-button class="w3-margin-right" color="secondary" (click)="pay()"
+    [disabled]="!dataFormGroup.valid || (savingPayment$ | async) || (import$ | async)">Pagar</button>
+</mat-dialog-actions>

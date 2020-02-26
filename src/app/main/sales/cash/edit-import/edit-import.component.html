@@ -1,0 +1,21 @@
+<div style="font-family: Raleway; max-width: 350px;">
+    <h2 style="font-size:1.2em; font-weight: bolder; border-bottom: 1px solid black; padding-bottom: 10px;"
+        mat-dialog-title>
+        <mat-icon style="vertical-align: middle;">create</mat-icon>
+        <span class="w3-margin-left">Editar Importe Inicial</span>
+    </h2>
+    <mat-dialog-content>
+        <p>¿Está seguro de editar el importe inicial?</p>
+        <mat-form-field appearance="outline" class="w3-block">
+            <mat-label>Importe Inicial</mat-label>
+            <input matInput [formControl]="edit" autocomplete="off" type="number">
+          </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions style="margin-bottom: -16px;" align="end">
+        <button mat-stroked-button class="w3-margin-right" mat-dialog-close
+            style="background: #B70705; color: white; font-family: Raleway;">Cancelar</button>
+        <button mat-stroked-button class="w3-margin-right" (click)="save()"
+            style="background: #EE8434; color: white; font-family: Raleway;">Editar</button>
+
+    </mat-dialog-actions>
+</div>

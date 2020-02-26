@@ -1,0 +1,202 @@
+<div class="animated fadeInUp w3-margin-bottom" style="padding:16px">
+
+  <div class="w3-row w3-margin-bottom">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10">
+      <div>
+        <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+          <mat-icon style="vertical-align:middle; transform: scale(1.5); margin-right: 1em; margin-left: 0.3em;">
+            monetization_on
+          </mat-icon>
+          Administrar cajas
+        </h1>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+
+  <div class="w3-row">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10">
+      <mat-progress-bar mode="indeterminate" *ngIf="loadingCashes$ | async"></mat-progress-bar>
+      <ng-container *ngIf="auth.userAndRole$ | async as user; else defaultUser">
+        <ng-container *ngIf="cashes$ | async as cashes">
+          <div>
+            <button *ngIf="user['role']['adminManageCashCreateAction']"
+              mat-raised-button class="ms-icons-color mat-PRIMARY
+            " style="margin:0em 0.2em 1em 0.2em" (click)="createCash()">
+              <mat-icon>add_circle</mat-icon> Crear
+            </button>
+
+            <button mat-button style="margin:0em 0.2em 1em 0.2em" disabled>
+              <mat-icon>monetization_on</mat-icon> {{cashes.length | number: '2.0'}} Cajas
+            </button>
+
+            <span style="margin-right:1em">
+              <mat-form-field autocomplete="off" color="accent">
+                <mat-label>Filtrar</mat-label>
+                <mat-icon matPrefix style="margin-right:0.5em; vertical-align:text-bottom">filter_list
+                </mat-icon>
+                <input matInput type="text" placeholder="Escriba ..." [formControl]="filterFormControl"
+                  autocomplete="off">
+              </mat-form-field>
+            </span>
+          </div>
+
+          <ng-container *ngIf="cashes.length; else default">
+            <div class="mat-elevation-z8" style="border-radius: 10px 10px 10px 10px">
+              <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+                <table mat-table [dataSource]="dataSource" matSort style="width:100%">
+
+                  <ng-container matColumnDef="index" sticky>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                    <th mat-header-cell style="padding:0px 25px" *matHeaderCellDef>N°</th>
+                    <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+                      {{i+1}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="open">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right" matTooltip="Ordenar tabla por estado"
+                      matTooltipPosition="above" mat-sort-header>Estado
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span style="padding: 8px 8px; border-radius: 10px"
+                        [ngClass]="{'w3-green': raw.open,'w3-red': !raw.open}">{{raw.open ? 'Abierta' : 'Cerrada'}}</span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="currentOwner">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right" matTooltip="Ordenar tabla por usuario"
+                      matTooltipPosition="above" mat-sort-header>Usuario
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.currentOwnerName ?  raw.currentOwnerName : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right" matTooltip="Ordenar tabla por nombre"
+                      matTooltipPosition="above" mat-sort-header>Caja</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.name}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="supervisor">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por supervisor" matTooltipPosition="above" mat-sort-header>Supervisor
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.supervisor.displayName}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="password">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Contraseña</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.password}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastOpening">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por apertura" matTooltipPosition="above" mat-sort-header>Última apertura
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span *ngIf="raw.lastOpening">{{raw.lastOpening.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.lastOpening" class="w3-small"><b>
+                          ({{raw.lastOpening.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastClosure">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right"
+                      matTooltip="Ordenar tabla por apertura" matTooltipPosition="above" mat-sort-header>Último cierre
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span *ngIf="raw.lastClosure">{{raw.lastClosure.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.lastClosure" class="w3-small"><b>
+                          ({{raw.lastClosure.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Acciones</th>
+                    <td mat-cell style="padding:0px 15px" *matCellDef="let raw">
+                      <mat-menu #rawMenu="matMenu">
+                        <button *ngIf="user['role']['adminManageCashEditAction']"
+                          mat-menu-item (click)="editCash(raw)" >
+                          <mat-icon class="ms-icons-color">edit</mat-icon> Editar
+                        </button>
+                        <button *ngIf="user['role']['adminManageCashDeleteAction']"
+                          mat-menu-item (click)="deleteCash(raw)">
+                          <mat-icon class="ms-icons-color">delete</mat-icon> Borrar
+                        </button>
+                        <button *ngIf="user['role']['adminManageCashHistoryButton']"
+                          mat-menu-item (click)="viewRecord(raw)">
+                          <mat-icon class="ms-icons-color">folder</mat-icon> Ver historial
+                        </button>
+                      </mat-menu>
+                      <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="text-align-last: center;"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+              </div>
+              <mat-paginator style="border-radius: 0px 0px 10px 10px" [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+        <ng-template #default>
+          <div class="w3-container w3-center  w3-round-large mat-elevation-z8 w3-margin-top w3-margin-bottom">
+            <h2 style="font-family: Raleway; color: dimgray">
+              No hay cajas registradas
+            </h2>
+          </div>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #defaultUser>
+        <p class="mat-h2" style="font-family: Raleway; color: #2b2b2b">Cargando credenciales ...</p>
+      </ng-template>
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+</div>

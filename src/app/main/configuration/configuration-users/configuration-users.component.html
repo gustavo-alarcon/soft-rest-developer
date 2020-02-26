@@ -1,0 +1,19 @@
+<mat-sidenav-container style="min-height:77vh">
+
+  <mat-sidenav mode="side" [opened]="sidenav.sidenavUsersToggle" class="w3-card-4">
+    <button mat-button routerLink="users" class="w3-margin-top w3-block ms-color-2b"
+      style="text-align:left;border-radius:0px 0px 0px 0px">
+      <mat-icon style="margin-right:0.2em;margin-left:0.2em" class="ms-color-2b">format_list_bulleted</mat-icon> Lista
+      de usuarios
+    </button><br>
+    <button mat-button routerLink="permits" class="w3-block ms-color-2b"
+      style="text-align:left;border-radius:0px 0px 0px 0px">
+      <mat-icon style="margin-right:0.2em;margin-left:0.2em" class="ms-color-2b">assignment_ind</mat-icon> Permisos
+    </button><br>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="w3-padding">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,0 +1,311 @@
+<div mat-dialog-title>
+    <div
+        style="font-size: x-large; margin-bottom: 8px; display: flex; flex-direction: row; justify-content: space-between;">
+        <span>
+            <mat-icon style="vertical-align: middle; margin-right: 4px;">add_circle</mat-icon>
+            Registrar Compra
+        </span>
+        <button mat-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</div>
+
+<div mat-dialog-content>
+    <div class="parentDialog">
+        <!-- Document Form -->
+        <!-- Document Details -->
+        <div class="leftChildDialog">
+            <form [formGroup]="documentForm">
+                <div formGroupName="documentDetails" style="display: flex; flex-direction: column;">
+
+                    <!-- Detalle del comprobante -->
+                    <p><b>Detalle del Comprobante</b></p>
+
+                    <!-- documentDate -->
+                    <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <input formControlName="documentDate" matInput [matDatepicker]="dp3"
+                            placeholder="Fecha de Emisión">
+                        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- documentType -->
+                    <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <mat-label>Tipo de Comprobante</mat-label>
+                        <mat-select formControlName="documentType" placeholder="Tipo de Comprobante">
+                            <mat-option *ngFor="let type of documentType" [value]="type">{{type}}</mat-option>
+                        </mat-select>
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field>
+
+                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                        <!-- documentSerial -->
+                        <mat-form-field appearance="outline" class="w3-margin-bottom" style="width: 45%">
+                            <mat-label>N. Serie</mat-label>
+                            <input formControlName="documentSerial" matInput placeholder="Doc. Serie">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+
+                        <!-- documentCorrelative -->
+                        <mat-form-field appearance="outline" class="w3-margin-bottom" style="width: 45%">
+                            <mat-label>N. Correlativo</mat-label>
+                            <input formControlName="documentCorrelative" matInput placeholder="Doc. Correlativo">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- provider -->
+                    <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <mat-label>Proveedor</mat-label>
+                        <mat-select formControlName="provider" placeholder="Proveedor">
+                            <mat-option (click)="onAddProvider()">
+                                <mat-icon>add</mat-icon>Añadir Proveedor
+                            </mat-option>
+                            <mat-option *ngFor=" let provider of providersList$ | async" [value]="provider">
+                                {{provider.name}} | <span class="w3-small">{{provider.ruc}}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field>
+
+                    <!-- socialReason -->
+                    <!-- <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <mat-label>Razón social</mat-label>
+                        <input formControlName="socialReason" matInput placeholder="Razón social"
+                            [value]="socialReason$ | async">
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field> -->
+
+                    <!-- Detalle de pago -->
+                    <p style="margin-top: 16px"><b>Detalle de Pago</b></p>
+                    <!-- paymentType -->
+                    <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <mat-label>Tipo de Pago</mat-label>
+                        <mat-select formControlName="paymentType" placeholder="Tipo de Pago">
+                            <mat-option *ngFor="let type of paymentType" [value]="type">{{type}}</mat-option>
+                        </mat-select>
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field>
+
+                    <!-- creditExpirationDate -->
+                    <mat-form-field appearance="outline" class="w3-margin-bottom animated fadeInRight"
+                        *ngIf="!documentForm.get('documentDetails.creditExpirationDate').disabled">
+                        <mat-label>Fecha de Expiración de Crédito</mat-label>
+                        <input formControlName="creditExpirationDate" matInput
+                            placeholder="Fecha de Expiración de Crédito" [matDatepicker]="dpCredit">
+                        <mat-datepicker-toggle matSuffix [for]="dpCredit"></mat-datepicker-toggle>
+                        <mat-datepicker #dpCredit disabled="false"></mat-datepicker>
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+
+        <!-- Importes Details -->
+        <div class="rightChildDialog">
+            <form [formGroup]="documentForm">
+                <div formGroupName="imports" style="display: flex; flex-direction: column; width: 100%;">
+
+                    <!-- Importes -->
+                    <p><b>Importes</b></p>
+
+                    <div style="display: flex; flex-direction: row; justify-content: space-between;"
+                        *ngIf="documentForm.get('documentDetails.documentType').value == 'FACTURA'">
+                        <!-- subtotalImport -->
+                        <!-- <mat-form-field appearance="outline" style="width: 45%" class="w3-margin-bottom">
+                            <mat-label>Sub Total</mat-label>
+                            <input formControlName="subtotalImport" matInput placeholder="Sub Total"
+                                [value]="getSubTotal()">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field> -->
+
+                        <!-- igvImport -->
+                        <!-- <mat-form-field appearance="outline" style="width: 45%" class="w3-margin-bottom">
+                            <mat-label>IGV</mat-label>
+                            <input formControlName="igvImport" matInput placeholder="IGV" type="number"
+                                [value]="getIGV()">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field> -->
+                    </div>
+
+                    <!-- totalImport -->
+                    <!-- <mat-form-field appearance="outline" class="w3-margin-bottom">
+                        <mat-label>Total</mat-label>
+                        <input formControlName="totalImport" matInput placeholder="Total" type="number"
+                            [value]="getTotalCost()">
+                        <mat-hint>*Requerido</mat-hint>
+                    </mat-form-field> -->
+
+                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                        <!-- paidImport -->
+                        <mat-form-field appearance="outline" style="width: 45%" class="w3-margin-bottom">
+                            <mat-label>A Cuenta (S/.)</mat-label>
+                            <input formControlName="paidImport" matInput placeholder="A Cuenta (S/.)" type="number">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+
+                        <!-- indebtImport -->
+                        <mat-form-field appearance="outline" style="width: 45%" class="w3-margin-bottom">
+                            <mat-label>En Deuda (S/.)</mat-label>
+                            <input formControlName="indebtImport" matInput placeholder="En Deuda (S/.)" type="number">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+
+                    <p><b>Lista de Items</b></p>
+
+
+                </div>
+            </form>
+            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                <form [formGroup]="itemsListForm" style="display: flex; flex-direction: column; width: 85%;">
+
+                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between;">
+                        <!-- type -->
+                        <mat-form-field appearance="outline" style="width: 45%;">
+                            <mat-label>Tipo</mat-label>
+                            <mat-select formControlName="type" matInput placeholder="Seleccione Tipo">
+                                <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
+                            </mat-select>
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+                        <!-- item -->
+                        <mat-form-field appearance="outline" style="width: 45%;">
+                            <mat-label>{{itemsListForm.get('type').value}}</mat-label>
+                            <input 
+                                type="text" placeholder="Seleccione Item" matInput formControlName="item" [matAutocomplete]="autoInput">
+                            <mat-autocomplete [displayWith]="displayFn.bind(this)" #autoInput="matAutocomplete">
+                                <mat-option (click)="onCreateInput()" [value]="">
+                                    <mat-icon>add</mat-icon>Crear Item
+                                </mat-option>
+                            <mat-option *ngFor="let input of inputList$ | async" [value]="input">
+                                {{input.name | titlecase }}
+                            </mat-option>
+                            </mat-autocomplete>
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+
+
+
+                    </div>
+                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between;">
+                        <!-- quantity -->
+                        <mat-form-field appearance="outline" style="width: 45%;">
+                            <mat-label>Cantidad {{itemsListForm.get('item').value == null ? null:itemsListForm.get('item').value['unit']}}</mat-label>
+                            <input formControlName="quantity" matInput placeholder="Cantidad" type="number">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+                        <!-- cost -->
+                        <mat-form-field appearance="outline" style="width: 45%;">
+                            <mat-label>Costo</mat-label>
+                            <input formControlName="cost" matInput placeholder="Costo" type="number">
+                            <mat-hint>*Requerido</mat-hint>
+                        </mat-form-field>
+
+                    </div>
+
+
+                </form>
+                <div style="height:100%; width: 10%">
+                    <button (click)="onAddInput()" mat-raised-button color="secondary" type="button"
+                        [disabled]="itemsListForm.status != 'VALID'">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Tabla de total de items -->
+
+            <table mat-table [dataSource]="inputsTableDataSource" class="mat-elevation-z8 w3-margin-top"
+                style="width:100%; max-height: 30vh; overflow:auto">
+                <!-- Cantidad -->
+                <ng-container matColumnDef="N°" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: left;">N°</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element;  let i = index" style="text-align: left;">
+                        {{1+i + (inputsTablePaginator.pageIndex * inputsTablePaginator.pageSize)}}</td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: left;"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="Tipo" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">Tipo</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        {{element.type}}</td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="Producto" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">Producto</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        {{element.item.name}}</td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;"></td>
+                </ng-container>
+                <ng-container matColumnDef="Medida" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">Medida</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        {{element.unit}}</td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;"></td>
+                </ng-container>
+                <ng-container matColumnDef="Cantidad" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">Cantidad</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        {{element.quantity}}</td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;"></td>
+                </ng-container>
+                <ng-container matColumnDef="averageCost" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">C.U. (S/.)</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        <span>{{element.averageCost | currency: 'S/.'}}</span>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;">
+                        <p *ngIf="this.documentForm.get('documentDetails').get('documentType').value === 'FACTURA'"
+                            style="margin: 0px 0px" class="animated fadeInRight w3-margin-top">Subtotal</p>
+                        <p *ngIf="this.documentForm.get('documentDetails').get('documentType').value === 'FACTURA'"
+                            style="margin: 0px 0px" class="animated fadeInRight">IGV</p>
+                        <p class="w3-margin-bottom" style="margin: 0px 0px">TOTAL</p>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalCost" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center;">Costo (S/.)</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center;">
+                        <span>{{element.totalCost | currency: 'S/.'}}</span>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center;">
+                        <p *ngIf="this.documentForm.get('documentDetails').get('documentType').value === 'FACTURA'"
+                            class="animated fadeInRight" style="margin: 0px 0px" class="animated fadeInRight w3-margin-top">{{getSubtotal() | currency: 'S/.'}}</p>
+                        <p *ngIf="this.documentForm.get('documentDetails').get('documentType').value === 'FACTURA'"
+                            class="animated fadeInRight" style="margin: 0px 0px" class="animated fadeInRight">{{getIGV() | currency: 'S/.'}}</p>
+                        <p class="animated fadeInRight" style="margin: 0px 0px" class="animated fadeInRight w3-margin-bottom">{{getTotalCost() | currency: 'S/.'}}</p>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Acciones" >
+                    <th class="w3-center w3-border-left" mat-header-cell *matHeaderCellDef style="text-align: center; padding-right:0;">Acciones</th>
+                    <td class="w3-center w3-border-left" mat-cell *matCellDef="let element" style="text-align: center; padding-right:0;">
+                        <button mat-button (click)="onDeleteInput(element)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef style="text-align: center; padding-right:0;"></td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="inputsTableDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns:inputsTableDisplayedColumns"></tr>
+                <tr mat-footer-row *matFooterRowDef="inputsTableDisplayedColumns"></tr>
+
+
+            </table>
+            <mat-paginator #inputsTablePaginator class="mat-elevation-z8" [pageSizeOptions]="[5, 10, 25, 100]" sticky>
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button class="w3-margin-right" color="PRIMARY" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button class="w3-margin-right" color="secondary" (click)="onSubmitPurchase()"
+        [disabled]="!documentForm.valid || (savingPurchase$ | async) || !inputsTableDataSource.data.length">Crear</button>
+</mat-dialog-actions>

@@ -1,0 +1,14 @@
+<h1 class="ms-font-rubik ms-color-bt" style="font-size:1.3em" mat-dialog-title>
+  <mat-icon style="vertical-align:middle">delete</mat-icon> Borrar usuario
+</h1>
+<mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" *ngIf="uploading"></mat-progress-bar>
+<mat-dialog-content>
+  <p class="ms-font-poppins ms-color-2b" style="font-size:1em">¿Está seguro de borrar este usuario?</p>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" style="margin-bottom: -16px">
+  <button mat-raised-button color="PRIMARY" class="w3-margin-right w3-margin-bottom" mat-dialog-close>No</button>
+  <button mat-raised-button color="secondary" class="w3-margin-bottom" (click)="delete()" [disabled]="uploading">Si,
+    borrar</button>
+</mat-dialog-actions>

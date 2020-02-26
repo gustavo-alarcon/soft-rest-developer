@@ -1,0 +1,58 @@
+
+<div class="w3-display-container animated fadeIn delay-5 slower ms-login-bg" 
+    style="
+    min-width: 100vw; 
+    background-image: url('../assets/images/logo5.png');
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;">
+
+    <div class="w3-display-middle w3-center ms-session-card" *ngIf="auth.user$ | async as user; else login"
+          style="background-color: rgba(223, 223, 223, 0.6); padding: 32px; border-radius: 5px; max-width: 450px; text-align:center">
+      <h1 class="ms-font-rubik w3-text-white" style="font-size:2em; font-weight: bold; color: #B70705;">Hola, {{user.name}}
+        {{user.lastName}}</h1>
+        <div style="display: flex; flex-direction: column;">
+          <button mat-raised-button color="warn" (click)="goToDashboard()" class="w3-center w3-btn w3-block ms-login-btn w3-round w3-margin-top w3-margin-bottom">Ingresar</button>
+          <button mat-raised-button (click)="auth.signOut()" class="w3-center w3-blue-gray w3-btn w3-block w3-round w3-margin-top w3-margin-bottom">Cerrar sesión</button>
+        </div>
+    </div>
+  
+    <ng-template #login>
+      <div class="w3-display-middle ms-login-card mat-elevation-z8" 
+            style="background-color: rgba(223, 223, 223, 0.6); padding: 32px; border-radius: 5px; max-width: 450px; text-align:center">
+  
+        <mat-progress-bar mode="indeterminate" *ngIf="auth.authLoader"></mat-progress-bar>
+        <span style="font-size: 65px; font-weight: bold; color: #B70705; ">Delicias Teté</span>
+
+        <mat-form-field class="w3-block w3-margin-right w3-margin-bottom w3-margin-top" appearance="fill">
+          <mat-label>Correo</mat-label>
+          <input matInput type="email" required placeholder="Escriba..." [formControl]="email">
+  
+          <mat-hint>
+            requerido *
+          </mat-hint>
+        </mat-form-field>
+  
+        <mat-form-field class="w3-block w3-margin-right w3-margin-bottom" appearance="fill">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" required placeholder="***" (keyup.enter)="checkAuth()"
+            [formControl]="password">
+          <button mat-icon-button mat-icon-button matSuffix (click)="hide = !hide"><mat-icon>{{ hide ? 'visibility' : 'visibility_off'}}</mat-icon></button>
+          <mat-hint>
+            requerido *
+          </mat-hint>
+        </mat-form-field>
+  
+        <br>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <button mat-raised-button color="warn" (click)="checkAuth()" class="w3-center w3-btn w3-block w3-round ms-login-btn" style="width: 250px">Iniciar Sesión</button>
+        </div>
+      </div>
+    </ng-template>
+  
+    <div class="w3-display-bottomright">
+      <p style="color: white; margin-right:1em">V1.0.0r</p>
+    </div>
+  
+  </div>

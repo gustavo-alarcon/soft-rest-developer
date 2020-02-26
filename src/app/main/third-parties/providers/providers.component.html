@@ -1,0 +1,221 @@
+<div class="animated fadeInUp w3-margin-bottom" style="padding:16px">
+
+  <div class="w3-row w3-margin-bottom">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10">
+      <div>
+        <h1 style="font-size:1.8em; color: #2B2B2B; font-family: Raleway; font-weight: bolder;">
+          <mat-icon style="vertical-align:middle; transform: scale(1.5); margin-right: 1em; margin-left: 0.3em;">
+            assignment_turned_in
+          </mat-icon>
+          Proveedores
+        </h1>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+
+  <div class="w3-row">
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+    <div class="w3-col s12 m10 l10">
+      <mat-progress-bar mode="indeterminate" *ngIf="loadingProviders$ | async"></mat-progress-bar>
+      <ng-container *ngIf="auth.userAndRole$ | async as user; else defaultUser">
+        <ng-container *ngIf="providers$ | async as providers">
+          <div>
+            <button *ngIf="user['role']['thirdPartiesProvidersCreateAction']"
+              mat-raised-button class="ms-icons-color mat-PRIMARY
+            " style="margin:0em 0.2em 1em 0.2em" (click)="createProvider()">
+              <mat-icon>add_circle</mat-icon> Crear
+            </button>
+
+            <button mat-button style="margin:0em 0.2em 1em 0.2em" disabled>
+              <mat-icon>assignment_turned_in</mat-icon> {{providers.length | number: '2.0'}} Proveedores
+            </button>
+
+            <span style="margin-right:1em">
+              <mat-form-field autocomplete="off" color="accent">
+                <mat-label>Filtrar</mat-label>
+                <mat-icon matPrefix style="margin-right:0.5em; vertical-align:text-bottom">filter_list
+                </mat-icon>
+                <input matInput type="text" placeholder="Escriba ..." [formControl]="filterFormControl"
+                  autocomplete="off">
+              </mat-form-field>
+            </span>
+          </div>
+
+          <ng-container *ngIf="providers.length; else default">
+            <div class="mat-elevation-z8" style="border-radius: 10px 10px 10px 10px">
+              <div style="overflow:auto; border-radius: 10px 10px 0px 0px">
+                <table mat-table [dataSource]="dataSource" 
+                    style="width: 100%; text-align: center !important; width: 100%; font-family: Raleway;">
+
+                  <ng-container matColumnDef="index" sticky>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">N°</th>
+                    <td mat-cell style="padding:0px 25px" *matCellDef="let raw; let i = index">
+                      {{i+1}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Nombre/Empresa</th>
+                    <td mat-cell style="padding:0px 8px; min-width: 250px" *matCellDef="let raw">
+                      <button mat-button class="ms-color-11">
+                        <mat-icon style="vertical-align: middle; margin-right: 8px">
+                          local_convenience_store</mat-icon>
+                        {{raw.name ? raw.name : '---'}}
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ruc">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">RUC</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.ruc ? raw.ruc : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="address">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Dirección</th>
+                    <td mat-cell style="padding:0px 8px; min-width:300px" *matCellDef="let raw">
+                      {{raw.address ? raw.address : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="phone">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Teléfono</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.phone ? raw.phone : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="detractionAccount">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Cuenta de detracciones
+                    </th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      {{raw.detractionAccount ? raw.detractionAccount : '---'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bankAccounts">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Cuentas de deposito</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <button *ngIf="user['role']['thirdPartiesProvidersAccountsAction']"
+                        mat-raised-button color="secondary" (click)="openBankAccounts(raw)"
+                        [disabled]="raw.bankAccounts ? !raw.bankAccounts.length : true">
+                        <mat-icon>credit_card</mat-icon> Cuentas
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contact">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Contactos</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <button *ngIf="user['role']['thirdPartiesProvidersContactsAction']"
+                        mat-raised-button color="secondary" (click)="openContactList(raw)"
+                        [disabled]="raw.contacts ? !raw.contacts.length : true">
+                        <mat-icon>contacts</mat-icon> Contactos
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                      Creado por</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span>{{raw.createdBy ? raw.createdBy.displayName : '---' }}</span><br>
+                      <span *ngIf="raw.createdAt">{{raw.createdAt.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.createdAt" class="w3-small"><b>
+                          ({{raw.createdAt.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="editedBy">
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">
+                      Editado por</th>
+                    <td mat-cell style="padding:0px 8px" *matCellDef="let raw">
+                      <span>{{raw.editedBy ? raw.editedBy.displayName : '---' }}</span><br>
+                      <span *ngIf="raw.editedAt">{{raw.editedAt.seconds * 1000 | date : 'dd/MM/yyyy'}}</span><br>
+                      <span *ngIf="raw.editedAt" class="w3-small"><b>
+                          ({{raw.editedAt.seconds * 1000 | date : 'hh:mm a'}})</b></span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef 
+                                    style="min-width: 150px; background: #C8C8C8;color: #828282;font-size: 0.9em;padding:0px 1em; border-left:1px solid #B9B9B9; "
+                                    class="w3-center w3-padding w3-border-right">Acciones</th>
+                    <td mat-cell class="w3-center mat-elevation-z4" style="padding:0px 15px" *matCellDef="let raw">
+                      <mat-menu #rawMenu="matMenu">
+                        <button *ngIf="user['role']['thirdPartiesProvidersEditAction']"
+                          mat-menu-item (click)="editProvider(raw)" >
+                          <mat-icon class="ms-icons-color">edit</mat-icon> Editar
+                        </button>
+                        <button *ngIf="user['role']['thirdPartiesProvidersDeleteAction']"
+                          mat-menu-item (click)="deleteProvider(raw)" >
+                          <mat-icon class="ms-icons-color">delete</mat-icon> Borrar
+                        </button>
+                      </mat-menu>
+                      <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="text-align-last: center;"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+              </div>
+              <mat-paginator style="border-radius: 0px 0px 10px 10px" [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+        <ng-template #default>
+          <div class="w3-container w3-center  w3-round-large mat-elevation-z8 w3-margin-top w3-margin-bottom">
+            <h2 style="font-family: Raleway; color: dimgray">
+              No hay proveedores registrados
+            </h2>
+          </div>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #defaultUser>
+        <p class="mat-h2" style="font-family: Raleway; color: #2b2b2b">Cargando credenciales ...</p>
+      </ng-template>
+    </div>
+    <div class="w3-col s0 m1 l1">
+      <p></p>
+    </div>
+  </div>
+</div>
