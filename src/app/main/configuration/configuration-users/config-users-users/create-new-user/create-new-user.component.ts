@@ -88,7 +88,7 @@ export class CreateNewUserComponent implements OnInit {
       email: ['', Validators.required],
       phone: '',
       dni: '',
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     })
 
     this.jobDataFormGroup = this.fb.group({
@@ -129,6 +129,7 @@ export class CreateNewUserComponent implements OnInit {
         take(1)
       )
       .subscribe(res => {
+        console.log(res);
         if (res['result'] === "ERROR") {
           switch (res['code']) {
             case "auth/email-already-exists":
