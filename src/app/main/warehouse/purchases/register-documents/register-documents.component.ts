@@ -70,7 +70,7 @@ export class RegisterDocumentsComponent implements OnInit {
 
     this.inputList$ = combineLatest(this.itemsListForm.get('type').valueChanges.pipe(startWith('INSUMOS')), this.itemsListForm.get('item').valueChanges.pipe(startWith(''))).pipe(
       map(([type, item])=> (item)),
-      switchMap((productName)=> {
+      switchMap((product)=> {
         if(this.itemsListForm.get('type').value == null){
           return of([]);
         }
@@ -324,11 +324,16 @@ export class RegisterDocumentsComponent implements OnInit {
 
   filterRecipe(recipeList: Array<Grocery | Input | Household | Dessert | Recipe>, recipeName: Grocery | Input | Household | Dessert | Recipe | string){
     if(!!recipeName){
-      if(typeof recipeName != 'string'){
+      if(typeof recipeName == 'object'){
         return recipeList.filter(recipe => recipe.name.toUpperCase().includes(recipeName.name.toUpperCase()))
       }
       else{
-        return recipeList.filter(recipe => recipe.name.toUpperCase().includes(recipeName.toUpperCase()))
+        if(!!recipeList.find(recipe => recipe.sku == recipeName)){
+          this.itemsListForm.get('item').setValue(recipeList.find(recipe => recipe.sku == recipeName));
+        }
+        else{
+          return recipeList.filter(recipe => recipe.name.toUpperCase().includes(recipeName.toUpperCase()))
+        }
       }
     }
     else{
