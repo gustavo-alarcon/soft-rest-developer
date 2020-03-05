@@ -11,7 +11,7 @@
                 <div style="display: flex; flex-wrap: wrap; align-items: center;" class="w3-margin-bottom">
                     <form [formGroup]="search">
                         <mat-form-field style="margin-right: 16px" color="accent">
-                            <input matInput placeholder="Seleccione un rango de fechas" [satDatepicker]="picker"
+                            <input readonly matInput placeholder="Seleccione un rango de fechas" [satDatepicker]="picker"
                                 formControlName="date">
                             <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
                             <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>

@@ -25,10 +25,10 @@
 
                     <!-- documentDate -->
                     <mat-form-field appearance="outline" class="w3-margin-bottom">
-                        <input formControlName="documentDate" matInput [matDatepicker]="dp3"
-                            placeholder="Fecha de Emisión">
-                        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
-                        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                        <input readonly formControlName="documentDate" matInput [matDatepicker]="dp3"
+                            placeholder="Fecha de Emisión" readonly>
+                        <mat-datepicker-toggle matSuffix [for]="dp3" ></mat-datepicker-toggle>
+                        <mat-datepicker #dp3 ></mat-datepicker>
                     </mat-form-field>
 
                     <!-- documentType -->
@@ -93,7 +93,7 @@
                     <mat-form-field appearance="outline" class="w3-margin-bottom animated fadeInRight"
                         *ngIf="!documentForm.get('documentDetails.creditExpirationDate').disabled">
                         <mat-label>Fecha de Expiración de Crédito</mat-label>
-                        <input formControlName="creditExpirationDate" matInput
+                        <input readonly formControlName="creditExpirationDate" matInput readonly
                             placeholder="Fecha de Expiración de Crédito" [matDatepicker]="dpCredit">
                         <mat-datepicker-toggle matSuffix [for]="dpCredit"></mat-datepicker-toggle>
                         <mat-datepicker #dpCredit disabled="false"></mat-datepicker>

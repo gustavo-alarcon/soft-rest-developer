@@ -18,7 +18,7 @@
 
                     <!-- dateRange -->
                     <mat-form-field style="margin-right: 16px" color="accent" appearance="outline">
-                        <input matInput placeholder="Seleccione un rango de fechas" [satDatepicker]="picker"
+                        <input readonly matInput placeholder="Seleccione un rango de fechas" [satDatepicker]="picker"
                             formControlName="dateRange">
                         <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
                         <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>

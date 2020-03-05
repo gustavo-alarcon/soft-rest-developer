@@ -21,9 +21,12 @@ import {  MatNativeDateModule,
           MAT_DATE_LOCALE,
           MatOptionModule,
           MatSelectModule,
-          MatAutocompleteModule} from '@angular/material';
+          MatAutocompleteModule,
+          MAT_DATE_FORMATS} from '@angular/material';
 import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MAT_DATE_LOCALE as MAT_DATE_LOCALESAT }  from 'saturn-datepicker';
+import { MAT_DATE_FORMATS as MAT_DATE_FORMATSSAT }  from 'saturn-datepicker';
+
 import { CreateInputDialogComponent } from './create-input-dialog/create-input-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -58,7 +61,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   providers:[
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 5000}},
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    { provide: MAT_DATE_LOCALESAT, useValue: 'en-GB' }
+    { provide: MAT_DATE_LOCALESAT, useValue: 'en-GB' },
+    //{ provide: MAT_DATE_FORMATS, useValue: 'en-GB' },
+    //{ provide: MAT_DATE_FORMATSSAT, useValue: 'en-GB' }
+
   ],
   entryComponents: [
     CreateInputDialogComponent

@@ -88,14 +88,14 @@ export class RegisterDocumentsComponent implements OnInit {
   initForms(){
     this.documentForm = this.fb.group({
       documentDetails: this.fb.group({
-        documentDate: [null, Validators.required],
+        documentDate: [new Date(), Validators.required],
         documentType: [null, Validators.required, this.purchaseValidator(this.dbs)],
         documentSerial: [null, Validators.required, this.purchaseValidator(this.dbs)],
         documentCorrelative: [null, Validators.required, this.purchaseValidator(this.dbs)],
         //socialReason: [{value: null, disabled: true}, Validators.required],     //Depends on RUC, should not be sent
         provider: [null, Validators.required, this.purchaseValidator(this.dbs)],
         paymentType: [null, Validators.required],
-        creditExpirationDate: [{value: null, disabled: true}, Validators.required]  //Depend on Credito
+        creditExpirationDate: [{value: new Date(), disabled: true}, Validators.required]  //Depend on Credito
       }),
       imports: this.fb.group({
         subtotalImport: [{value: null, disabled: true}, Validators.required],   //Depends on RUC
